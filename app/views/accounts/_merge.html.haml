@@ -1,0 +1,20 @@
+.remote
+  = form_for(:account, :remote => true) do |f|
+    = link_to_close merge_account_path(@account)
+
+    = f.error_messages :object_name => t('account')
+
+    .section
+      %table
+        %tr
+          %td
+            .label.top.req #{t(:merge_account)}:
+            = f.select :account, :merge_account, @accounts.by_name.collect { |a| [a.name, a.id] }, {:allow_blank => true}
+
+    .buttonbar
+      - if Setting.compound_address
+        = f.submit t(:merge_account), :onclick => "crm.clear_all_hints()"
+      - else
+        = f.submit t(:merge_account)
+      #{t :or}
+      = link_to_cancel account_path(@account)

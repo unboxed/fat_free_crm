@@ -100,4 +100,36 @@ feature 'Accounts', %q{
     fill_in 'query', :with => "Contact"
     find('#accounts').has_selector?('li', :count => 0)
   end
+
+  scenario 'should merge two accounts together', :js => true do
+    account1 = FactoryGirl.create(:account, :name => "Account 1")
+    account2 = FactoryGirl.create(:account, :name => "Account 2")
+    contact1 = FactoryGirl.create(:contact, :first_name => "Contact", :last_name => "One")
+    contact2 = FactoryGirl.create(:contact, :first_name => "Contact", :last_name => "Two")
+    opportunity1 = FactoryGirl.create(:opportunity, :account => account1, :name => "Opportunity One")
+    opportunity2 = FactoryGirl.create(:opportunity, :account => account2, :name => "Opportunity Two")
+    FactoryGirl.create(:account_contact, :account => account1, :contact => contact1)
+    FactoryGirl.create(:account_contact, :account => account2, :contact => contact2)
+    FactoryGirl.create(:account_opportunity, :account => account1, :opportunity => opportunity1)
+    FactoryGirl.create(:account_opportunity, :account => account2, :opportunity => opportunity2)
+
+    visit accounts_page
+    page.should have_content("Account 1")
+    page.should have_content("Account 2")
+    click_link("Account 1")
+    page.should have_content("Contact One")
+    page.should have_content("Opportunity One")
+    click_link("Merge with...")
+    chosen_select("Account 2", :from => "account_to_merge")
+    click_button("Merge Accounts")
+    page.should have_content("Accounts were successfully merged.")
+    page.should have_content("Account 1")
+    page.should have_content("Contact One")
+    page.should have_content("Contact Two")
+    page.should have_content("Opportunity One")
+    page.should have_content("Opportunity Two")
+    click_link("Accounts")
+    page.should have_content("Account 1")
+    page.should_not have_content("Account 2")
+  end
 end

@@ -1,0 +1,20 @@
+id = dom_id(@account)
+
+if params[:cancel].true? # <--------------------- Hide [Edit Account]
+    page[id].replace :partial => "account", :collection => [ @account ]
+else # <----------------------------------------  Show [Edit Account] form.
+
+  if params[:cancel].blank?                       # Called from accounts list item...
+    page.call "crm.highlight_off", id             # Disable onMouseOver for the list item.
+    page.call "crm.hide_form", :create_account    # Hide [Create Account] form if any.
+    page[id].replace_html :partial => "merge"     # Show [Edit Account] form.
+    page.call "crm.init_chosen_fields"
+
+  elsif params[:cancel].false?                    # Called from title of the account landing page...
+    page[:merge_account].replace_html :partial => "merge"
+    page.call "crm.init_chosen_fields"
+    page.call "crm.flip_form", :merge_account
+    page.call "crm.set_title", :merge_account, "#{t :merge_account}"
+  end
+
+end

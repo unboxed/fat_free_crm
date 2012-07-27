@@ -65,6 +65,13 @@ class AccountsController < EntitiesController
     respond_with(@account)
   end
 
+  # GET /accounts/1/merge                                                  AJAX
+  #----------------------------------------------------------------------------
+  def merge
+    @accounts = Account.except(@account)
+    respond_with(@account)
+  end
+
   # POST /accounts
   #----------------------------------------------------------------------------
   def create

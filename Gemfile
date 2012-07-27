@@ -5,6 +5,7 @@ source :rubygems
 gem 'mysql2', '0.3.10'
 # gem 'sqlite3'
 # gem 'pg', '~> 0.13.2'
+
 # Allows easy switching between locally developed gems, and gems installed from rubygems.org
 # See README for more info at: https://github.com/ndbroadbent/bundler_local_development
 gem 'bundler_local_development', :group => :development, :require => false
@@ -35,7 +36,7 @@ end
 
 # Remove premailer auto-require
 gem 'premailer', :require => false
-gem 'ffcrm_ldap', '~> 0.1.4'
+# gem 'ffcrm_ldap', '~> 0.1.4'
 # Remove fat_free_crm dependency, to stop it from being auto-required too early.
 remove 'fat_free_crm'
 

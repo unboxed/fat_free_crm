@@ -117,6 +117,10 @@ class Account < ActiveRecord::Base
     end
   end
 
+  def merge_accounts
+
+  end
+
   # Class methods.
   #----------------------------------------------------------------------------
   def self.create_or_select_for(model, params, users)

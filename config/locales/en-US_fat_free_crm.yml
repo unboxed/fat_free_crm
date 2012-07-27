@@ -292,6 +292,7 @@ en-US:
   keep_private: Keep it private, do not share with others
   mail_to: Mail to %{value}
   make_public: Share it with everyone
+  merge_account: Merge with...
   mobile_small: mobile
   open_in_window: Open %{value} in a new window
   phone_small: phone
