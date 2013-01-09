@@ -102,7 +102,38 @@ GEM
     factory_girl_rails (3.0.0)
       factory_girl (~> 3.0.0)
       railties (>= 3.0.0)
+    fat_free_crm (0.11.4)
+      acts-as-taggable-on (~> 2.3.3)
+      acts_as_commentable (~> 3.0.1)
+      acts_as_list (~> 0.1.4)
+      ajax-chosen-rails (>= 0.2.1)
+      authlogic (= 3.1.0)
+      cancan
+      cocaine
+      dynamic_form
+      email_reply_parser_ffcrm
+      ffaker (>= 1.12.0)
+      haml (~> 3)
+      jquery-rails
+      nokogiri
+      paper_trail
+      paperclip (~> 2.8.0)
+      premailer
+      prototype-rails
+      rails (~> 3.2)
+      rails3-jquery-autocomplete
+      ransack_ffcrm (~> 0.7.1)
+      ransack_ui (>= 1.0.2)
+      responds_to_parent (>= 1.1.0)
+      sass (~> 3)
+      select2-rails
+      simple_form (~> 2.0.1)
+      valium
+      will_paginate (~> 3.0.2)
     ffaker (1.14.0)
+    ffcrm_ldap (0.1.4)
+      fat_free_crm (~> 0.11.3)
+      net-ldap (~> 0.3.1)
     ffi (1.2.0)
     haml (3.1.7)
     headless (0.2.2)
@@ -130,6 +161,7 @@ GEM
     mime-types (1.19)
     multi_json (1.5.0)
     mysql2 (0.3.10)
+    net-ldap (0.3.1)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -297,6 +329,7 @@ DEPENDENCIES
   execjs
   factory_girl_rails (~> 3.0.0)
   ffaker (>= 1.12.0)
+  ffcrm_ldap (~> 0.1.4)
   haml (~> 3)
   headless
   jquery-rails
