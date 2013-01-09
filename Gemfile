@@ -87,4 +87,4 @@ group :assets do
   end
 end
 
-gem 'turbo-sprockets-rails3'
+#gem 'turbo-sprockets-rails3'
