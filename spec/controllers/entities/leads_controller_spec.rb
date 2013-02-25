@@ -372,7 +372,7 @@ describe LeadsController do
         xhr :put, :create, :lead => { :first_name => "Billy", :last_name => "Bones"}, :campaign => @campaign.id
         assigns[:campaign].should == @campaign
       end
-      
+
       it "should add a new comment to the newly created lead when specified" do
         @lead = FactoryGirl.create(:lead)
         Lead.stub!(:new).and_return(@lead)
@@ -947,7 +947,7 @@ describe LeadsController do
   #----------------------------------------------------------------------------
   describe "responding to POST discard" do
     before(:each) do
-      @attachment = FactoryGirl.create(:task, :assigned_to => current_user)
+      @attachment = FactoryGirl.create(:task, :assigned_to => current_user.id)
       @model = FactoryGirl.create(:lead)
       @model.tasks << @attachment
     end

@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :task do
-    user                
+    user
     asset               nil
     assigned_to         nil
     completed_by        nil
