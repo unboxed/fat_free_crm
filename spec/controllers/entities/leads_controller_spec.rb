@@ -726,7 +726,7 @@ describe LeadsController do
       @opportunity = FactoryGirl.build(:opportunity, :user => current_user, :campaign => @lead.campaign,
                                    :account => @account)
       Opportunity.stub!(:new).and_return(@opportunity)
-      @contact = FactoryGirl.build(:contact, :user => current_user, :lead => @lead)
+      @contact = FactoryGirl.create(:contact, :user => current_user, :lead => @lead)
       Contact.stub!(:new).and_return(@contact)
 
       xhr :put, :promote, :id => 42, :account => { :id => 123 }, :opportunity => { :name => "Hello" }
