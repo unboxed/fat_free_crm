@@ -99,7 +99,7 @@ describe TasksController do
 
         (assigns[:tasks].keys.map(&:to_sym) - @tasks.keys).should == []
         (assigns[:tasks].values.flatten - @tasks.values.flatten).should == []
-        hash = Hash.from_xml(response.body)
+        hash = Hash.from_trusted_xml(response.body)
         hash["hash"].keys.each do |key|
           hash["hash"][key].each do |attr|
             task = Task.new(attr)
