@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 # == Schema Information
 #
 # Table name: tasks
@@ -51,7 +39,7 @@ class Task < ActiveRecord::Base
   # what gets shown on Tasks/Pending and Tasks/Completed pages.
   scope :my, lambda { |*args|
     options = args[0] || {}
-    user_option = options[:user] || User.current_user
+    user_option = (options.is_a?(Hash) ? options[:user] : options) || User.current_user
     includes(:assignee).
     where('(user_id = ? AND assigned_to IS NULL) OR assigned_to = ?', user_option, user_option).
     order(options[:order] || 'name ASC').
@@ -88,21 +76,21 @@ class Task < ActiveRecord::Base
   scope :completed,     where('completed_at IS NOT NULL').order('tasks.completed_at DESC')
 
   # Due date scopes.
-  scope :due_asap,      where("due_at IS NULL AND bucket = 'due_asap'").order('tasks.id DESC')
-  scope :overdue,       where('due_at IS NOT NULL AND due_at < ?', Time.zone.now.midnight.utc).order('tasks.id DESC')
-  scope :due_today,     where('due_at >= ? AND due_at < ?', Time.zone.now.midnight.utc, Time.zone.now.midnight.tomorrow.utc).order('tasks.id DESC')
-  scope :due_tomorrow,  where('due_at >= ? AND due_at < ?', Time.zone.now.midnight.tomorrow.utc, Time.zone.now.midnight.tomorrow.utc + 1.day).order('tasks.id DESC')
-  scope :due_this_week, where('due_at >= ? AND due_at < ?', Time.zone.now.midnight.tomorrow.utc + 1.day, Time.zone.now.next_week.utc).order('tasks.id DESC')
-  scope :due_next_week, where('due_at >= ? AND due_at < ?', Time.zone.now.next_week.utc, Time.zone.now.next_week.end_of_week.utc + 1.day).order('tasks.id DESC')
-  scope :due_later,     where("(due_at IS NULL AND bucket = 'due_later') OR due_at >= ?", Time.zone.now.next_week.end_of_week.utc + 1.day).order('tasks.id DESC')
+  scope :due_asap,      lambda { where("due_at IS NULL AND bucket = 'due_asap'").order('tasks.id DESC') }
+  scope :overdue,       lambda { where('due_at IS NOT NULL AND due_at < ?', Time.zone.now.midnight.utc).order('tasks.id DESC') }
+  scope :due_today,     lambda { where('due_at >= ? AND due_at < ?', Time.zone.now.midnight.utc, Time.zone.now.midnight.tomorrow.utc).order('tasks.id DESC') }
+  scope :due_tomorrow,  lambda { where('due_at >= ? AND due_at < ?', Time.zone.now.midnight.tomorrow.utc, Time.zone.now.midnight.tomorrow.utc + 1.day).order('tasks.id DESC') }
+  scope :due_this_week, lambda { where('due_at >= ? AND due_at < ?', Time.zone.now.midnight.tomorrow.utc + 1.day, Time.zone.now.next_week.utc).order('tasks.id DESC') }
+  scope :due_next_week, lambda { where('due_at >= ? AND due_at < ?', Time.zone.now.next_week.utc, Time.zone.now.next_week.end_of_week.utc + 1.day).order('tasks.id DESC') }
+  scope :due_later,     lambda { where("(due_at IS NULL AND bucket = 'due_later') OR due_at >= ?", Time.zone.now.next_week.end_of_week.utc + 1.day).order('tasks.id DESC') }
 
   # Completion time scopes.
-  scope :completed_today,      where('completed_at >= ? AND completed_at < ?', Time.zone.now.midnight.utc, Time.zone.now.midnight.tomorrow.utc)
-  scope :completed_yesterday,  where('completed_at >= ? AND completed_at < ?', Time.zone.now.midnight.yesterday.utc, Time.zone.now.midnight.utc)
-  scope :completed_this_week,  where('completed_at >= ? AND completed_at < ?', Time.zone.now.beginning_of_week.utc , Time.zone.now.midnight.yesterday.utc)
-  scope :completed_last_week,  where('completed_at >= ? AND completed_at < ?', Time.zone.now.beginning_of_week.utc - 7.days, Time.zone.now.beginning_of_week.utc)
-  scope :completed_this_month, where('completed_at >= ? AND completed_at < ?', Time.zone.now.beginning_of_month.utc, Time.zone.now.beginning_of_week.utc - 7.days)
-  scope :completed_last_month, where('completed_at >= ? AND completed_at < ?', (Time.zone.now.beginning_of_month.utc - 1.day).beginning_of_month.utc, Time.zone.now.beginning_of_month.utc)
+  scope :completed_today,      lambda { where('completed_at >= ? AND completed_at < ?', Time.zone.now.midnight.utc, Time.zone.now.midnight.tomorrow.utc) }
+  scope :completed_yesterday,  lambda { where('completed_at >= ? AND completed_at < ?', Time.zone.now.midnight.yesterday.utc, Time.zone.now.midnight.utc) }
+  scope :completed_this_week,  lambda { where('completed_at >= ? AND completed_at < ?', Time.zone.now.beginning_of_week.utc , Time.zone.now.midnight.yesterday.utc) }
+  scope :completed_last_week,  lambda { where('completed_at >= ? AND completed_at < ?', Time.zone.now.beginning_of_week.utc - 7.days, Time.zone.now.beginning_of_week.utc) }
+  scope :completed_this_month, lambda { where('completed_at >= ? AND completed_at < ?', Time.zone.now.beginning_of_month.utc, Time.zone.now.beginning_of_week.utc - 7.days) }
+  scope :completed_last_month, lambda { where('completed_at >= ? AND completed_at < ?', (Time.zone.now.beginning_of_month.utc - 1.day).beginning_of_month.utc, Time.zone.now.beginning_of_month.utc) }
 
   scope :text_search, lambda { |query|
     query = query.gsub(/[^\w\s\-\.'\p{L}]/u, '').strip
@@ -250,5 +238,7 @@ class Task < ActiveRecord::Base
     # always in 2012-10-28 06:28 format regardless of language
     Time.parse(self.calendar)
   end
+
+  ActiveSupport.run_load_hooks(:fat_free_crm_task, self)
 
 end

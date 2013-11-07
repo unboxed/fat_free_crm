@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 module ApplicationHelper
 
   def tabs(tabs = nil)
@@ -78,7 +66,7 @@ module ApplicationHelper
       raw "document.observe('dom:loaded', function() { #{js} });"
     end
   end
-  
+
   def generate_js_for_popups(related, *assets)
     assets.map do |asset|
       render(:partial => "shared/select_popup", :locals => { :related => related, :popup => asset })
@@ -121,7 +109,7 @@ module ApplicationHelper
     link_to(t(:edit),
       options[:url] || polymorphic_url(record, :action => :edit),
       :remote  => true,
-      :onclick => "this.href = this.href.split('?')[0] + '?previous='+crm.find_form('edit_#{name}');"
+      :onclick => "this.href = this.href.split('?')[0] + '?previous='+crm.find_form('edit_#{name}');".html_safe
     )
   end
 
@@ -134,7 +122,6 @@ module ApplicationHelper
       options[:url] || url_for(record),
       :method => :delete,
       :remote => true,
-      :onclick => visual_effect(:highlight, dom_id(object), :startcolor => "#ffe4e1"),
       :confirm => confirm
     )
   end
@@ -147,8 +134,7 @@ module ApplicationHelper
     link_to(t(:discard),
       url_for(:controller => parent, :action => :discard, :id => parent_id, :attachment => object.class.name, :attachment_id => object.id),
       :method  => :post,
-      :remote  => true,
-      :onclick => visual_effect(:highlight, dom_id(object), :startcolor => "#ffe4e1")
+      :remote  => true
     )
   end
 
@@ -172,14 +158,20 @@ module ApplicationHelper
 
   # Bcc: to dropbox address if the dropbox has been set up.
   #----------------------------------------------------------------------------
-  def link_to_email(email, length = nil)
+  def link_to_email(email, length = nil, &block)
     name = (length ? truncate(email, :length => length) : email)
     if Setting.email_dropbox && Setting.email_dropbox[:address].present?
       mailto = "#{email}?bcc=#{Setting.email_dropbox[:address]}"
     else
       mailto = email
     end
-    link_to(h(name), "mailto:#{mailto}", :title => email)
+    if block_given?
+      link_to("mailto:#{mailto}", :title => email) do
+        yield
+      end
+    else
+      link_to(h(name), "mailto:#{mailto}", :title => email)
+    end
   end
 
   #----------------------------------------------------------------------------
@@ -203,8 +195,8 @@ module ApplicationHelper
   def visible;   { :style => "visibility:visible;" }; end
 
   #----------------------------------------------------------------------------
-  def one_submit_only(form)
-    { :onsubmit => "$$('#'+this.id+' input[type=\"submit\"]')[0].disabled = true" }
+  def one_submit_only(form='')
+    { :onsubmit => "jQuery('#'+this.id+' input[type=\\'submit\\']').disable()".html_safe }
   end
 
   #----------------------------------------------------------------------------
@@ -221,11 +213,10 @@ module ApplicationHelper
   def confirm_delete(model, params = {})
     question = %(<span class="warn">#{t(:confirm_delete, model.class.to_s.downcase)}</span>).html_safe
     yes = link_to(t(:yes_button), params[:url] || model, :method => :delete)
-    no = link_to_function(t(:no_button), "$('menu').update($('confirm').innerHTML)")
-    update_page do |page|
-      page << "$('confirm').update($('menu').innerHTML)"
-      page[:menu].replace_html "#{question} #{yes} : #{no}"
-    end
+    no = link_to_function(t(:no_button), "jQuery('#menu').html(jQuery('#confirm').html());")
+    text = "jQuery('#confirm').html( jQuery('#menu').html() );\n"
+    text << "jQuery('#menu').html('#{question} #{yes} : #{no}');"
+    text.html_safe
   end
 
   #----------------------------------------------------------------------------
@@ -242,10 +233,10 @@ module ApplicationHelper
   # Refresh sidebar using the action view within an arbitrary controller.
   #----------------------------------------------------------------------------
   def refresh_sidebar_for(view, action = nil, shake = nil)
-    update_page do |page|
-      page[:sidebar].replace_html :partial => "layouts/sidebar", :locals => { :view => view, :action => action }
-      page[shake].visual_effect(:shake, :duration => 0.2, :distance => 3) if shake
-    end
+    text = ""
+    text << "jQuery('#sidebar').html('#{ j render(:partial => "layouts/sidebar", :locals => { :view => view, :action => action }) }');"
+    text << "jQuery('##{j shake.to_s}').effect('shake', { duration:200, distance: 3 });" if shake
+    text.html_safe
   end
 
   # Display web presence mini-icons for Contact or Lead.

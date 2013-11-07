@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe CommentsController do
@@ -5,14 +10,6 @@ describe CommentsController do
 
     it "recognizes and generates #index" do
       { :get => "/comments" }.should route_to(:controller => "comments", :action => "index")
-    end
-
-    it "recognizes and generates #new" do
-      { :get => "/comments/new" }.should route_to(:controller => "comments", :action => "new")
-    end
-
-    it "recognizes and generates #show" do
-      { :get => "/comments/1" }.should route_to(:controller => "comments", :action => "show", :id => "1")
     end
 
     it "recognizes and generates #edit" do
@@ -32,4 +29,3 @@ describe CommentsController do
     end
   end
 end
-

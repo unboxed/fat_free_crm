@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe ContactsController do
@@ -65,7 +70,7 @@ describe ContactsController do
 
     describe "with mime type of JSON" do
       it "should render all contacts as JSON" do
-        @controller.should_receive(:get_contacts).and_return(contacts = mock("Array of Contacts"))
+        @controller.should_receive(:get_contacts).and_return(contacts = double("Array of Contacts"))
         contacts.should_receive(:to_json).and_return("generated JSON")
 
         request.env["HTTP_ACCEPT"] = "application/json"
@@ -76,7 +81,7 @@ describe ContactsController do
 
     describe "with mime type of XML" do
       it "should render all contacts as xml" do
-        @controller.should_receive(:get_contacts).and_return(contacts = mock("Array of Contacts"))
+        @controller.should_receive(:get_contacts).and_return(contacts = double("Array of Contacts"))
         contacts.should_receive(:to_xml).and_return("generated XML")
 
         request.env["HTTP_ACCEPT"] = "application/xml"
@@ -298,7 +303,7 @@ describe ContactsController do
 
       it "should expose a newly created contact as @contact and render [create] template" do
         @contact = FactoryGirl.build(:contact, :first_name => "Billy", :last_name => "Bones")
-        Contact.stub!(:new).and_return(@contact)
+        Contact.stub(:new).and_return(@contact)
 
         xhr :post, :create, :contact => { :first_name => "Billy", :last_name => "Bones" }, :account => { :name => "Hello world" }
         assigns(:contact).should == @contact
@@ -309,7 +314,7 @@ describe ContactsController do
       it "should be able to associate newly created contact with the opportunity" do
         @opportunity = FactoryGirl.create(:opportunity, :id => 987);
         @contact = FactoryGirl.build(:contact)
-        Contact.stub!(:new).and_return(@contact)
+        Contact.stub(:new).and_return(@contact)
 
         xhr :post, :create, :contact => { :first_name => "Billy"}, :account => {}, :opportunity => 987
         assigns(:contact).opportunities.should include(@opportunity)
@@ -318,7 +323,7 @@ describe ContactsController do
 
       it "should reload contacts to update pagination if called from contacts index" do
         @contact = FactoryGirl.build(:contact, :user => current_user)
-        Contact.stub!(:new).and_return(@contact)
+        Contact.stub(:new).and_return(@contact)
 
         request.env["HTTP_REFERER"] = "http://localhost/contacts"
         xhr :post, :create, :contact => { :first_name => "Billy", :last_name => "Bones" }, :account => {}
@@ -327,7 +332,7 @@ describe ContactsController do
 
       it "should add a new comment to the newly created contact when specified" do
         @contact = FactoryGirl.build(:contact, :user => current_user)
-        Contact.stub!(:new).and_return(@contact)
+        Contact.stub(:new).and_return(@contact)
 
         xhr :post, :create, :contact => { :first_name => "Testy", :last_name => "McTest" }, :account => { :name => "Hello world" }, :comment_body => "Awesome comment is awesome"
         assigns[:contact].comments.map(&:comment).should include("Awesome comment is awesome")
@@ -338,7 +343,7 @@ describe ContactsController do
 
       before(:each) do
         @contact = FactoryGirl.build(:contact, :first_name => nil, :user => current_user, :lead => nil)
-        Contact.stub!(:new).and_return(@contact)
+        Contact.stub(:new).and_return(@contact)
       end
 
       # Redraw [create] form with selected account.

@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 # == Schema Information
 #
 # Table name: fields
@@ -44,7 +32,7 @@ class Field < ActiveRecord::Base
   serialize :settings, HashWithIndifferentAccess
 
   belongs_to :field_group
-  
+
   scope :core_fields, where(:type => 'CoreField')
   scope :custom_fields, where("type != 'CoreField'")
   scope :without_pairs, where(:pair_id => nil)
@@ -103,7 +91,7 @@ class Field < ActiveRecord::Base
     when 'date'
       value && value.strftime(I18n.t("date.formats.mmddyy"))
     when 'datetime'
-      value && value.strftime(I18n.t("time.formats.mmddyyyy_hhmm"))
+      value && value.in_time_zone.strftime(I18n.t("time.formats.mmddyyyy_hhmm"))
     when 'check_boxes'
       value.select(&:present?).in_groups_of(2, false).map {|g| g.join(', ')}.join("<br />".html_safe) if Array === value
     else
@@ -138,4 +126,5 @@ class Field < ActiveRecord::Base
 
   end
 
+  ActiveSupport.run_load_hooks(:fat_free_crm_field, self)
 end

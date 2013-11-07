@@ -1,25 +1,14 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class DateTimeInput < SimpleForm::Inputs::DateTimeInput
 
   def input
     add_autocomplete!
     input_html_options.merge(input_options)
+    input_html_options.merge!(:value => value)
     @builder.text_field(attribute_name, input_html_options)
   end
 
@@ -36,4 +25,13 @@ class DateTimeInput < SimpleForm::Inputs::DateTimeInput
   def add_autocomplete!
     input_html_options[:autocomplete] ||= 'off'
   end
+
+  # Serialize into a value recognised by datepicker, also sorts out timezone conversion
+  #------------------------------------------------------------------------------
+  def value
+    val = object.send(attribute_name)
+    val.present? ? val.strftime('%Y-%m-%d %H:%M') : nil
+  end
+
+  ActiveSupport.run_load_hooks(:fat_free_crm_date_time_input, self)
 end

@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Admin::UsersController do
@@ -112,7 +117,7 @@ describe Admin::UsersController do
 
       it "assigns a newly created user as @user and renders [create] template" do
         @user = FactoryGirl.build(:user, :username => @username, :email => @email)
-        User.stub!(:new).and_return(@user)
+        User.stub(:new).and_return(@user)
 
         xhr :post, :create, :user => { :username => @username, :email => @email, :password => @password, :password_confirmation => @password }
         assigns[:user].should == @user
@@ -135,7 +140,7 @@ describe Admin::UsersController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved user as @user and re-renders [create] template" do
         @user = FactoryGirl.build(:user, :username => "", :email => "")
-        User.stub!(:new).and_return(@user)
+        User.stub(:new).and_return(@user)
 
         xhr :post, :create, :user => {}
         assigns[:user].should == @user
@@ -236,7 +241,7 @@ describe Admin::UsersController do
 
       xhr :delete, :destroy, :id => @user.id
       flash[:warning].should_not == nil
-      lambda { User.find(@user) }.should_not raise_error(ActiveRecord::RecordNotFound)
+      expect { User.find(@user) }.not_to raise_error()
       response.should render_template("admin/users/destroy")
     end
   end

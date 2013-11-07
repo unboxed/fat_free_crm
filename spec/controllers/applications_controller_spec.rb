@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require 'spec_helper'
 
 describe ApplicationController do
@@ -17,8 +22,8 @@ describe ApplicationController do
     end
     
     it "should return [6, 9] when related is 'campaigns/7'" do
-      controller.stub!(:controller_name).and_return('opportunities')
-      campaign = mock(Campaign, :opportunities => [mock(:id => 6), mock(:id => 9)])
+      controller.stub(:controller_name).and_return('opportunities')
+      campaign = double(Campaign, :opportunities => [double(:id => 6), double(:id => 9)])
       Campaign.should_receive(:find_by_id).with('7').and_return(campaign)
       controller.send(:auto_complete_ids_to_exclude, 'campaigns/7').sort.should == [6, 9]
     end
@@ -29,8 +34,8 @@ describe ApplicationController do
     end
     
     it "should return [] when related object association is not found" do
-      controller.stub!(:controller_name).and_return('not_a_method_that_exists')
-      campaign = mock(Campaign)
+      controller.stub(:controller_name).and_return('not_a_method_that_exists')
+      campaign = double(Campaign)
       Campaign.should_receive(:find_by_id).with('7').and_return(campaign)
       controller.send(:auto_complete_ids_to_exclude, 'campaigns/7').should == []
     end

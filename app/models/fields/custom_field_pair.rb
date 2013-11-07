@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class CustomFieldPair < CustomField
 
   has_one :pair, :class_name => CustomFieldPair, :foreign_key => 'pair_id', :dependent => :destroy # points to 'end'
@@ -31,7 +19,7 @@ class CustomFieldPair < CustomField
     field2 = klass.create( base_params.merge(pair['1']).merge('pair_id' => field1.id, 'required' => field1.required, 'disabled' => field1.disabled) )
     [field1, field2]
   end
-  
+
   # Helper to update a pair. Used in fields_controller
   #------------------------------------------------------------------------------
   def self.update_pair(params)
@@ -50,5 +38,7 @@ class CustomFieldPair < CustomField
   def paired_with
     pair || CustomFieldPair.where(:pair_id => id).first
   end
+
+  ActiveSupport.run_load_hooks(:fat_free_crm_custom_field_pair, self)
 
 end

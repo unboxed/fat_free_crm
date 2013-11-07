@@ -1,49 +1,45 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require 'rubygems'
 
 ENV["RAILS_ENV"] = 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
+require 'capybara/rails'
 
 require 'acts_as_fu'
 require 'factory_girl'
 require 'ffaker'
 
+require 'coveralls'
+Coveralls.wear!
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each{ |f| require File.expand_path(f) }
+Dir["./spec/support/**/*.rb"].sort.each {|f| require f}
 
 # Load shared behavior modules to be included by Runner config.
-Dir[File.dirname(__FILE__) + "/shared/*.rb"].each{ |f| require File.expand_path(f) }
+Dir["./spec/shared/**/*.rb"].sort.each {|f| require f}
 
 TASK_STATUSES = %w(pending assigned completed).freeze
-OPPORTUNITY_STATUSES = %w(prospecting analysis presentation proposal negotiation final_review won lost).freeze
-Setting[:opportunity_stage] = OPPORTUNITY_STATUSES
 
 I18n.locale = 'en-US'
 
 Paperclip.options[:log] = false
 
 RSpec.configure do |config|
-  # == Mock Framework
-  #
-  # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
-  #
-  # config.mock_with :mocha
-  # config.mock_with :flexmock
-  # config.mock_with :rr
+
   config.mock_with :rspec
 
   config.fixture_path = "#{Rails.root}/spec/fixtures"
 
   # RSpec configuration options for Fat Free CRM.
   config.include RSpec::Rails::Matchers
-  config.include(SharedControllerSpecs, :type => :controller)
-  config.include(SharedModelSpecs,      :type => :model)
 
   config.before(:each) do
-    PaperTrail.enabled = false
-
     # Overwrite locale settings within "config/settings.yml" if necessary.
     # In order to ensure that test still pass if "Setting.locale" is not set to "en-US".
     I18n.locale = 'en-US'
@@ -58,10 +54,10 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
   end
-  config.before :all, :type => :request do
+  config.before :all, :type => :feature do
     DatabaseCleaner.clean_with(:truncation)
   end
-  config.around :each, :type => :request do |example|
+  config.around :each, :type => :feature do |example|
     DatabaseCleaner.strategy = :truncation
     example.run
     DatabaseCleaner.strategy = :transaction
@@ -72,10 +68,32 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  # PaperTrail slows down tests so only turned on when needed.
+  PaperTrail.enabled = false
 
-  # config.before :all, :type => :view do
-  #   view.lookup_context.prefixes << 'entities'
-  # end
+  config.around :each, :type => :feature do |example|
+    was_enabled = PaperTrail.enabled?
+    PaperTrail.enabled = true
+    PaperTrail.controller_info = {}
+    PaperTrail.whodunnit = nil
+    begin
+      example.run
+    ensure
+      PaperTrail.enabled = was_enabled
+    end
+  end
+
+  config.around :each, :versioning => true do |example|
+    was_enabled = PaperTrail.enabled?
+    PaperTrail.enabled = true
+    PaperTrail.controller_info = {}
+    PaperTrail.whodunnit = nil
+    begin
+      example.run
+    ensure
+      PaperTrail.enabled = was_enabled
+    end
+  end
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -85,7 +103,7 @@ end
 
 ActionView::TestCase::TestController.class_eval do
   def controller_name
-    request.path_parameters["controller"].split('/').last
+    HashWithIndifferentAccess.new(request.path_parameters)["controller"].split('/').last
   end
 end
 

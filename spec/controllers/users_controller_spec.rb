@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe UsersController do
@@ -30,7 +35,7 @@ describe UsersController do
       end
 
       it "should render the requested user as JSON" do
-        User.should_receive(:find).and_return(user = mock("User"))
+        User.should_receive(:find).and_return(user = double("User"))
         user.should_receive(:to_json).and_return("generated JSON")
 
         get :show, :id => 42
@@ -51,7 +56,7 @@ describe UsersController do
       end
 
       it "should render the requested user as XML" do
-        User.should_receive(:find).and_return(user = mock("User"))
+        User.should_receive(:find).and_return(user = double("User"))
         user.should_receive(:to_xml).and_return("generated XML")
 
         get :show, :id => 42
@@ -76,7 +81,7 @@ describe UsersController do
       it "should expose a new user as @user and render [new] template" do
         @controller.should_receive(:can_signup?).and_return(true)
         @user = FactoryGirl.build(:user)
-        User.stub!(:new).and_return(@user)
+        User.stub(:new).and_return(@user)
 
         get :new
         assigns[:user].should == @user
@@ -121,7 +126,7 @@ describe UsersController do
         @email = @username + "@example.com"
         @password = "secret"
         @user = FactoryGirl.build(:user, :username => @username, :email => @email)
-        User.stub!(:new).and_return(@user)
+        User.stub(:new).and_return(@user)
       end
 
       it "exposes a newly created user as @user and redirect to profile page" do
@@ -132,7 +137,7 @@ describe UsersController do
       end
 
       it "should redirect to login page if user signup needs approval" do
-        Setting.stub!(:user_signup).and_return(:needs_approval)
+        Setting.stub(:user_signup).and_return(:needs_approval)
 
         post :create, :user => { :username => @username, :email => @email, :password => @password, :password_confirmation => @password }
         assigns[:user].should == @user
@@ -144,7 +149,7 @@ describe UsersController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved user as @user and renders [new] template" do
         @user = FactoryGirl.build(:user, :username => "", :email => "")
-        User.stub!(:new).and_return(@user)
+        User.stub(:new).and_return(@user)
 
         post :create, :user => {}
         assigns[:user].should == @user
@@ -256,7 +261,7 @@ describe UsersController do
 # -------------------------- Fix later --------------------------------
 #    it "should return errors if the avatar failed to get uploaded and resized" do
 #      @image = fixture_file_upload("spec/fixtures/rails.png", "image/png")
-#      @user.stub!(:save).and_return(false) # make it fail
+#      @user.stub(:save).and_return(false) # make it fail
 
 #      xhr :put, :upload_avatar, :id => @user.id, :avatar => { :image => @image }
 #      @user.avatar.errors.should_not be_empty
@@ -287,8 +292,8 @@ describe UsersController do
   describe "responding to PUT change_password" do
     before(:each) do
       require_user
-      @current_user_session.stub!(:unauthorized_record=).and_return(current_user)
-      @current_user_session.stub!(:save).and_return(current_user)
+      @current_user_session.stub(:unauthorized_record=).and_return(current_user)
+      @current_user_session.stub(:save).and_return(current_user)
       @user = current_user
       @new_password = "secret?!"
     end

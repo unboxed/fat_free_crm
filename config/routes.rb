@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 Rails.application.routes.draw do
   resources :lists
 
@@ -17,7 +22,7 @@ Rails.application.routes.draw do
   match '/home/redraw',   :as => :redraw
 
   resource  :authentication
-  resources :comments
+  resources :comments, :except => [:new, :show]
   resources :emails
   resources :passwords
 

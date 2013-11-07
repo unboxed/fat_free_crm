@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class SubscriptionMailer < ActionMailer::Base
 
   def comment_notification(user, comment)
@@ -25,13 +13,18 @@ class SubscriptionMailer < ActionMailer::Base
     @comment = comment
     @user = comment.user
 
+    if (reply_to = Setting.email_comment_replies[:address]).blank?
+      email_host = Setting.host.present? ? Setting.host : 'example.com'
+      reply_to = "no-reply@#{email_host}"
+    end
+
     # If entity has tags, join them and wrap in parantheses
     subject = "RE: [#{@entity_type.downcase}:#{@entity.id}] #{@entity_name}"
     subject << " (#{@entity.tag_list.join(', ')})" if @entity.tag_list.any?
 
     mail :subject => subject,
          :to => user.email,
-         :from => "#{@user.full_name} <#{Setting.email_comment_replies[:address]}>",
+         :from => "#{@user.full_name} <#{reply_to}>",
          :date => Time.now
   end
 end

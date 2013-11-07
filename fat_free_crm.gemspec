@@ -12,6 +12,7 @@ Gem::Specification.new do |gem|
   gem.files = `git ls-files`.split("\n")
   gem.version = FatFreeCRM::VERSION::STRING
   gem.required_ruby_version = '>= 1.9'
+  gem.license = 'MIT'
 
   gem.add_dependency 'rails',               '~> 3.2.12'
   gem.add_dependency 'prototype-rails'
@@ -19,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'select2-rails'
   gem.add_dependency 'simple_form',         '~> 2.0.1'
   gem.add_dependency 'will_paginate',       '~> 3.0.2'
-  gem.add_dependency 'paperclip',           '~> 2.8.0'
+  gem.add_dependency 'paperclip'
   # Manually added paperclip gem dependency "cocaine" in order to fix load error: "no such file to load -- cocaine"
   gem.add_dependency 'cocaine'
   gem.add_dependency 'paper_trail'
@@ -37,6 +38,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'responds_to_parent',  '>= 1.1.0'
   gem.add_dependency 'rails3-jquery-autocomplete'
   gem.add_dependency 'valium'
+  gem.add_dependency 'psych'
 
   # FatFreeCRM has released it's own versions of the following gems:
   #-----------------------------------------------------------------

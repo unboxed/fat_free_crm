@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 # == Schema Information
 #
 # Table name: accounts
@@ -83,14 +71,14 @@ class Account < ActiveRecord::Base
   ransack_can_autocomplete
 
   validates_presence_of :name, :message => :missing_account_name
-  validates_uniqueness_of :name, :scope => :deleted_at
+  validates_uniqueness_of :name, :scope => :deleted_at if Setting.require_unique_account_names
   validate :users_for_shared_access
   before_save :nullify_blank_category
 
   # Default values provided through class methods.
   #----------------------------------------------------------------------------
   def self.per_page ; 20 ; end
-  
+
   # Extract last line of billing address and get rid of numeric zipcode.
   #----------------------------------------------------------------------------
   def location
@@ -143,4 +131,6 @@ class Account < ActiveRecord::Base
   def nullify_blank_category
     self.category = nil if self.category.blank?
   end
+
+  ActiveSupport.run_load_hooks(:fat_free_crm_account, self)
 end

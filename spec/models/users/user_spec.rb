@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 # == Schema Information
 #
 # Table name: users
@@ -55,14 +60,14 @@ describe User do
       it "should not destroy the user if she owns #{asset}" do
         FactoryGirl.create(asset, :user => @user)
         @user.destroy
-        lambda { User.find(@user) }.should_not raise_error(ActiveRecord::RecordNotFound)
+        expect { User.find(@user) }.to_not raise_error()
         @user.destroyed?.should == false
       end
 
       it "should not destroy the user if she has #{asset} assigned" do
         FactoryGirl.create(asset, :assignee => @user)
         @user.destroy
-        lambda { User.find(@user) }.should_not raise_error(ActiveRecord::RecordNotFound)
+        expect { User.find(@user) }.to_not raise_error()
         @user.destroyed?.should == false
       end
     end
@@ -72,20 +77,20 @@ describe User do
       account = FactoryGirl.create(:account, :user => current_user)
       FactoryGirl.create(:comment, :user => @user, :commentable => account)
       @user.destroy
-      lambda { User.find(@user) }.should_not raise_error(ActiveRecord::RecordNotFound)
+      expect { User.find(@user) }.to_not raise_error()
       @user.destroyed?.should == false
     end
 
     it "should not destroy the current user" do
       login
       current_user.destroy
-      lambda { current_user.reload }.should_not raise_error(ActiveRecord::RecordNotFound)
+      expect { current_user.reload }.to_not raise_error()
       current_user.should_not be_destroyed
     end
 
     it "should destroy the user" do
       @user.destroy
-      lambda { User.find(@user) }.should raise_error(ActiveRecord::RecordNotFound)
+      expect { User.find(@user) }.to raise_error(ActiveRecord::RecordNotFound)
       @user.should be_destroyed
     end
 
@@ -122,7 +127,7 @@ describe User do
     describe "have_assigned_opportunities" do
       before :each do
         @user1 = FactoryGirl.create(:user)
-        FactoryGirl.create(:open_opportunity, :assignee => @user1)
+        FactoryGirl.create(:opportunity, :assignee => @user1, :stage => 'analysis')
 
         @user2 = FactoryGirl.create(:user)
 

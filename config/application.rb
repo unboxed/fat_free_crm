@@ -1,7 +1,12 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path('../boot', __FILE__)
 
+require 'rubygems'
 require 'rails/all'
-require 'fat_free_crm/syck_yaml'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
@@ -20,9 +25,9 @@ module FatFreeCRM
     # -- all .rb files in that directory are automatically loaded.
 
     # Models are organized in sub-directories
-    config.autoload_paths += Dir[Rails.root.join("app/models/**")] +                                                                 
+    config.autoload_paths += Dir[Rails.root.join("app/models/**")] +
                              Dir[Rails.root.join("app/controllers/entities")]
-    
+
     # Prevent Field class from being reloading more than once as this clears registered customfields
     config.autoload_once_paths += [File.expand_path("../app/models/fields/field.rb", __FILE__)]
 

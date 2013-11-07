@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class CampaignsController < EntitiesController
   before_filter :get_data_for_sidebar, :only => :index
 
@@ -25,6 +13,7 @@ class CampaignsController < EntitiesController
 
     respond_with @campaigns do |format|
       format.xls { render :layout => 'header' }
+      format.csv { render :csv => @campaigns }
     end
   end
 
@@ -43,7 +32,7 @@ class CampaignsController < EntitiesController
         @comment = Comment.new
         @timeline = timeline(@campaign)
       end
-      
+
       format.js do
         @stage = Setting.unroll(:opportunity_stage)
         @comment = Comment.new
@@ -154,7 +143,7 @@ class CampaignsController < EntitiesController
     current_user.pref[:campaigns_sort_by]  = Campaign::sort_by_map[params[:sort_by]] if params[:sort_by]
     @campaigns = get_campaigns(:page => 1, :per_page => params[:per_page])
     set_options # Refresh options
-    
+
     respond_with(@campaigns) do |format|
       format.js { render :index }
     end
@@ -165,7 +154,7 @@ class CampaignsController < EntitiesController
   def filter
     session[:campaigns_filter] = params[:status]
     @campaigns = get_campaigns(:page => 1, :per_page => params[:per_page])
-    
+
     respond_with(@campaigns) do |format|
       format.js { render :index }
     end
@@ -185,7 +174,7 @@ private
         @campaigns = get_campaigns(:page => current_page - 1) if current_page > 1
         render :index and return
       end
-      # At this point render destroy.js.rjs
+      # At this point render destroy.js
     else # :html request
       self.current_page = 1
       flash[:notice] = t(:msg_asset_deleted, @campaign.name)

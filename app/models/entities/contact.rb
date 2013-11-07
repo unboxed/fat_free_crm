@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 # == Schema Information
 #
 # Table name: contacts
@@ -61,13 +49,15 @@ class Contact < ActiveRecord::Base
   has_many    :addresses, :dependent => :destroy, :as => :addressable, :class_name => "Address" # advanced search uses this
   has_many    :emails, :as => :mediator
 
+  delegate :campaign, :to => :lead, :allow_nil => true
+
   has_ransackable_associations %w(account opportunities tags activities emails addresses comments tasks)
   ransack_can_autocomplete
 
   serialize :subscribed_users, Set
 
   accepts_nested_attributes_for :business_address, :allow_destroy => true, :reject_if => proc {|attributes| Address.reject_address(attributes)}
-    
+
   scope :created_by, lambda { |user| { :conditions => [ "user_id = ?", user.id ] } }
   scope :assigned_to, lambda { |user| { :conditions => ["assigned_to = ?", user.id ] } }
 
@@ -87,7 +77,7 @@ class Contact < ActiveRecord::Base
 
     other = t[:email].matches("%#{query}%").or(t[:alt_email].matches("%#{query}%"))
     other = other.or(t[:phone].matches("%#{query}%")).or(t[:mobile].matches("%#{query}%"))
-    
+
     where( name_query.nil? ? other : name_query.or(other) )
   }
 
@@ -96,12 +86,12 @@ class Contact < ActiveRecord::Base
   uses_comment_extensions
   acts_as_taggable_on :tags
   has_paper_trail :ignore => [ :subscribed_users ]
-  
+
   has_fields
   exportable
   sortable :by => [ "first_name ASC",  "last_name ASC", "created_at DESC", "updated_at DESC" ], :default => "created_at DESC"
 
-  validates_presence_of :first_name, :message => :missing_first_name
+  validates_presence_of :first_name, :message => :missing_first_name if Setting.require_first_names
   validates_presence_of :last_name, :message => :missing_last_name if Setting.require_last_names
   validate :users_for_shared_access
 
@@ -169,9 +159,9 @@ class Contact < ActiveRecord::Base
     %w(first_name last_name title source email alt_email phone mobile blog linkedin facebook twitter skype do_not_call background_info).each do |name|
       attributes[name] = model.send(name.intern)
     end
-    
+
     contact = Contact.new(attributes)
-    
+
     # Set custom fields.
     if model.class.respond_to?(:fields)
       model.class.fields.each do |field|
@@ -180,19 +170,19 @@ class Contact < ActiveRecord::Base
         end
       end
     end
-    
+
     contact.business_address = Address.new(:street1 => model.business_address.street1, :street2 => model.business_address.street2, :city => model.business_address.city, :state => model.business_address.state, :zipcode => model.business_address.zipcode, :country => model.business_address.country, :full_address => model.business_address.full_address, :address_type => "Business") unless model.business_address.nil?
 
     # Save the contact only if the account and the opportunity have no errors.
     if account.errors.empty? && opportunity.errors.empty?
       # Note: contact.account = account doesn't seem to work here.
       contact.account_contact = AccountContact.new(:account => account, :contact => contact) unless account.id.blank?
-      contact.opportunities << opportunity unless opportunity.id.blank?
       if contact.access != "Lead" || model.nil?
         contact.save
       else
         contact.save_with_model_permissions(model)
       end
+      contact.opportunities << opportunity unless opportunity.id.blank? # must happen after contact is saved
     end
     contact
   end
@@ -203,7 +193,7 @@ class Contact < ActiveRecord::Base
   def users_for_shared_access
     errors.add(:access, :share_contact) if self[:access] == "Shared" && !self.permissions.any?
   end
-  
+
   # Handles the saving of related accounts
   #----------------------------------------------------------------------------
   def save_account(params)
@@ -218,4 +208,5 @@ class Contact < ActiveRecord::Base
     self.reload unless self.new_record? # ensure the account association is updated
   end
 
+  ActiveSupport.run_load_hooks(:fat_free_crm_contact, self)
 end

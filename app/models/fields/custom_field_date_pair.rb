@@ -1,25 +1,9 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class CustomFieldDatePair < CustomFieldPair
-
-  # Register this CustomField with the application
-  #------------------------------------------------------------------------------
-  register(:as => 'date_pair', :klass => 'CustomFieldDatePair', :type => 'date')
 
   # For rendering paired values
   # Handle case where both pairs are blank
@@ -38,11 +22,11 @@ class CustomFieldDatePair < CustomFieldPair
       ""
     end
   end
-  
+
   def render(value)
     value && value.strftime(I18n.t("date.formats.mmddyy"))
   end
-  
+
   def custom_validator(obj)
     super
     # validate when we get to 2nd of the pair
@@ -55,4 +39,5 @@ class CustomFieldDatePair < CustomFieldPair
     end
   end
 
+  ActiveSupport.run_load_hooks(:fat_free_crm_date_pair, self)
 end

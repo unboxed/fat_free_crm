@@ -1,25 +1,13 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class TasksController < ApplicationController
   before_filter :require_user
   before_filter :set_current_tab, :only => [ :index, :show ]
   before_filter :update_sidebar, :only => :index
-  
+
   # GET /tasks
   #----------------------------------------------------------------------------
   def index
@@ -29,6 +17,7 @@ class TasksController < ApplicationController
     respond_with @tasks do |format|
       format.xls { render :layout => 'header' }
       format.csv { render :csv => @tasks.map(&:second).flatten }
+      format.xml { render :xml => @tasks, :except => [:subscribed_users] }
     end
   end
 
@@ -94,7 +83,7 @@ class TasksController < ApplicationController
   def update
     @view = params[:view] || "pending"
     @task = Task.tracked_by(current_user).find(params[:id])
-    @task_before_update = @task.clone
+    @task_before_update = @task.dup
 
     if @task.due_at && (@task.due_at < Date.today.to_time)
       @task_before_update.bucket = "overdue"

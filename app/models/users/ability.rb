@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 # See the wiki for details: https://github.com/ryanb/cancan/wiki/Defining-Abilities
 
 class Ability
@@ -12,7 +17,7 @@ class Ability
       can :manage, entities, :access => 'Public'
       can :manage, entities + [Task], :user_id => user.id
       can :manage, entities + [Task], :assigned_to => user.id
-      
+
       #
       # Due to an obscure bug (see https://github.com/ryanb/cancan/issues/213)
       # we must switch on user.admin? here to avoid the nil constraints which
@@ -35,7 +40,9 @@ class Ability
           end
         end
       end # if user.admin?
-      
+
     end
   end
+
+  ActiveSupport.run_load_hooks(:fat_free_crm_ability, self)
 end

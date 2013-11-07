@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 # == Schema Information
 #
 # Table name: opportunities
@@ -89,7 +77,7 @@ class Opportunity < ActiveRecord::Base
   exportable
   sortable :by => [ "name ASC", "amount DESC", "amount*probability DESC", "probability DESC", "closes_on ASC", "created_at DESC", "updated_at DESC" ], :default => "created_at DESC"
 
-  has_ransackable_associations %w(account contacts tags activities emails comments)
+  has_ransackable_associations %w(account contacts tags campaign activities emails comments)
   ransack_can_autocomplete
 
   validates :stage, :inclusion => { :in => Setting.unroll(:opportunity_stage).map{|s| s.last.to_s } }
@@ -205,4 +193,5 @@ class Opportunity < ActiveRecord::Base
     end
   end
 
+  ActiveSupport.run_load_hooks(:fat_free_crm_opportunity, self)
 end

@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 # Fat Free CRM settings are stored in three places, and are loaded in the following order:
 #
 # 1) config/settings.default.yml
@@ -169,11 +157,14 @@
 :task_calendar_with_time: true
 
 
-# Require last name on Leads and Contacts
+# Enable/disable first/last name validations on Leads and Contacts
 #------------------------------------------------------------------------------
-# If this validation is disabled, records will only require a first name.
 #
-:require_last_names: true
+:require_first_names: true
+:require_last_names:  true
+
+# Enable/disable name validation on Accounts
+:require_unique_account_names: true
 
 # Show comments on dashboard
 :comments_visible_on_dashboard: false
@@ -206,27 +197,66 @@
 
 # Main and Admin Tabs
 #------------------------------------------------------------------------------
-:tabs: [
-  { :active : true,  :text : :tab_dashboard,     :url : { :controller : "home"                   } },
-  { :active : false, :text : :tab_tasks,         :url : { :controller : "tasks"                  } },
-  { :active : false, :text : :tab_campaigns,     :url : { :controller : "campaigns"              } },
-  { :active : false, :text : :tab_leads,         :url : { :controller : "leads"                  } },
-  { :active : false, :text : :tab_accounts,      :url : { :controller : "accounts"               } },
-  { :active : false, :text : :tab_contacts,      :url : { :controller : "contacts"               } },
-  { :active : false, :text : :tab_opportunities, :url : { :controller : "opportunities"          } },
-  { :active : false, :text : :tab_team,          :url : { :controller : "users",
-                                                          :action :     "opportunities_overview" } }
+:tabs:
+- :active: true
+  :text: :tab_dashboard
+  :url:
+    :controller: home
+- :active: false
+  :text: :tab_tasks
+  :url:
+    :controller: tasks
+- :active: false
+  :text: :tab_campaigns
+  :url:
+    :controller: campaigns
+- :active: false
+  :text: :tab_leads
+  :url:
+    :controller: leads
+- :active: false
+  :text: :tab_accounts
+  :url:
+    :controller: accounts
+- :active: false
+  :text: :tab_contacts
+  :url:
+    :controller: contacts
+- :active: false
+  :text: :tab_opportunities
+  :url:
+    :controller: opportunities
+- :active: false
+  :text: :tab_team
+  :url:
+    :controller: users
+    :action: opportunities_overview
 
-]
-
-:admin_tabs: [
-  { :active : true,  :text : :admin_tab_users,    :url : { :controller : "admin/users"    } },
-  { :active : true,  :text : :admin_tab_groups,   :url : { :controller : "admin/groups"   } },
-  { :active : false, :text : :admin_tab_fields,   :url : { :controller : "admin/fields"   } },
-  { :active : false, :text : :admin_tab_tags,     :url : { :controller : "admin/tags"     } },
-  { :active : false, :text : :admin_tab_settings, :url : { :controller : "admin/settings" } },
-  { :active : false, :text : :admin_tab_plugins,  :url : { :controller : "admin/plugins"  } }
-]
+:admin_tabs:
+- :active: true
+  :text: :admin_tab_users
+  :url:
+    :controller: admin/users
+- :active: true
+  :text: :admin_tab_groups
+  :url:
+    :controller: admin/groups
+- :active: false
+  :text: :admin_tab_fields
+  :url:
+    :controller: admin/fields
+- :active: false
+  :text: :admin_tab_tags
+  :url:
+    :controller: admin/tags
+- :active: false
+  :text: :admin_tab_settings
+  :url:
+    :controller: admin/settings
+- :active: false
+  :text: :admin_tab_plugins
+  :url:
+    :controller: admin/plugins
 
 # Account Category. To add custom account type use string value, for example:
 #
