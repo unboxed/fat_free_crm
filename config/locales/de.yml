@@ -1,8 +1,3 @@
-# German translations for Ruby on Rails
-# by Clemens Kofler (clemens@railway.at)
-# contributors:
-#  - Alexander Dreher - http://github.com/alexdreher - Rails 3 update
-
 ---
 de:
   date:
@@ -28,7 +23,7 @@ de:
     - Fr
     - Sa
     month_names:
-    -
+    - 
     - Jänner
     - Februar
     - März
@@ -42,7 +37,7 @@ de:
     - November
     - Dezember
     abbr_month_names:
-    -
+    - 
     - Jän
     - Feb
     - Mär

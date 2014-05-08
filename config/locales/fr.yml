@@ -192,7 +192,7 @@ fr:
       odd: doit être impair
       even: doit être pair
     template:
-      header: &73570860
+      header: &70225638225060
         one: ! 'Impossible d''enregistrer ce %{model} : 1 erreur'
         other: ! 'Impossible d''enregistrer ce %{model} : %{count} erreurs'
       body: ! 'Veuillez vérifier les champs suivants : '
@@ -221,7 +221,7 @@ fr:
         taken: n'est pas disponible
         record_invalid: ! 'La validation a échoué : %{errors}'
       template:
-        header: *73570860
+        header: *70225638225060
         body: ! 'Veuillez vérifier les champs suivants : '
       full_messages:
         format: ! '%{attribute} %{message}'

@@ -1,9 +1,6 @@
 ---
 en-US:
   language: English
-
-  # Generic terms.
-  #----------------------------------------------------------------------------
   id: Id
   all: All
   at: at
@@ -14,10 +11,6 @@ en-US:
   select_none: -- None --
   select_blank: -- Select --
   yes_button: 'Yes'
-
-
-  # Settings.
-  #----------------------------------------------------------------------------
   tab_dashboard: Dashboard
   tab_tasks: Tasks
   tab_campaigns: Campaigns
@@ -83,18 +76,12 @@ en-US:
   completed_last_week: Last week
   completed_this_month: This month
   completed_last_month: Last month
-
-  # Models/Activity.
-  #----------------------------------------------------------------------------
   one_hour: One Hour
   one_day: One Day
   two_days: Two Days
   one_week: One Week
   two_weeks: Two Weeks
   one_month: One Month
-
-  # Model Validations.
-  #----------------------------------------------------------------------------
   activerecord:
     errors:
       models:
@@ -172,18 +159,14 @@ en-US:
           lost: Closed/Lost
       account:
         rating:
-          "0": "-"
-          "1": "★"
-          "2": "★★"
-          "3": "★★★"
-          "4": "★★★★"
-          "5": "★★★★★"
-
+          '0': ! '-'
+          '1': ★
+          '2': ★★
+          '3': ★★★
+          '4': ★★★★
+          '5': ★★★★★
   msg_account_suspended: User account has been suspended.
   password_reset_instruction: password reset instructions
-
-  # Controllers.
-  #----------------------------------------------------------------------------
   msg_account_created: Your account has been created and is awaiting approval by the
     system administrator.
   msg_account_not_approved: Your account has not been approved yet.
@@ -214,9 +197,6 @@ en-US:
   msg_require_admin: You must be Administrator to access this page.
   msg_successful_signup: Successful signup, welcome to Fat Free CRM!
   msg_welcome: Welcome to Fat Free CRM!
-
-  # Options.
-  #----------------------------------------------------------------------------
   option_amount*probability: weighted amount
   activity_options: Show %{models} %{action_type} performed by %{user} in the past
     %{period}.
@@ -255,9 +235,6 @@ en-US:
   accounts_index_normal: Normal format
   leads_index_normal: Normal format
   campaigns_index_normal: Normal format
-
-  # Views -> Profile.
-  #----------------------------------------------------------------------------
   aim: AOL IM
   already_signed_up: Already signed up?
   alt_email: Alternative email
@@ -296,17 +273,11 @@ en-US:
   born_on: Born on
   reports_to: Reports to
   access: Access
-
-  # Views -> Authenticate.
-  #----------------------------------------------------------------------------
   forgot_password: Forgot Password
   login: Login
   no_account: Do not have an account?
   remember_me: Remember Me
   sign_up_now: Sign Up Now!
-
-  # Views -> Accounts.
-  #----------------------------------------------------------------------------
   account: Account
   account_id: Account
   select_an_account: Select an Account
@@ -339,9 +310,6 @@ en-US:
   website: Website
   account_with_title_department: ! '%{title}, %{department} at %{account}'
   account_with_title: ! '%{title} at %{account}'
-
-  # Views -> Campaigns.
-  #----------------------------------------------------------------------------
   actual: Actual
   actual_performance: Actual Performance
   budget: Budget
@@ -384,9 +352,6 @@ en-US:
   was_supposed_to_start: was supposed to start %{time_ago} ago on %{start_date}
   was_supposed_to_start_in: was supposed to start in %{starts_in} on %{start_date}
   select_a_campaign: Select a campaign
-
-  # Views -> Contacts.
-  #----------------------------------------------------------------------------
   alt_email_small: Other
   blog: Website/Blog
   contact: Contact
@@ -426,9 +391,6 @@ en-US:
   shared_with_everyone: Shared with everyone
   title: Title
   subscriptions: Subscriptions
-
-  # Views -> Leads.
-  #----------------------------------------------------------------------------
   convert: Convert
   convert_lead: Convert Lead
   convert_lead_permissions_intro: Contact permissions will be copied from the lead
@@ -465,9 +427,6 @@ en-US:
   total_leads: Total Leads
   show_status_info_small: Show status information for this lead.
   show_contact_info_small: Show contact information for this lead.
-
-  # Views -> Opportunities.
-  #----------------------------------------------------------------------------
   amount: Amount
   close_date: Close date
   closes_on: Closes on
@@ -500,9 +459,6 @@ en-US:
   stage: Stage
   total_opportunities: Total Opportunities
   weighted_amount: Weighted amount
-
-  # Views -> Tasks.
-  #----------------------------------------------------------------------------
   task: Task
   task_small: task
   tasks: Tasks
@@ -542,14 +498,8 @@ en-US:
   total_tasks: Total %{value}
   view_assigned_tasks: view assigned tasks
   view_pending_tasks: view pending tasks
-
-  # Views -> Team.
-  #----------------------------------------------------------------------------
   unassigned_opportunities: Unassigned Opportunities
   no_opportunities_found: There are currently no outstanding opportunities.
-
-  # Views -> Home.
-  #----------------------------------------------------------------------------
   action_completed: completed
   action_create: created
   action_destroy: deleted
@@ -587,9 +537,6 @@ en-US:
   my_accounts: My Accounts
   no_account_records: You have no accounts
   not_showing_hidden_entities: Not showing %{count} hidden %{entity}.
-
-  # Views -> Common.
-  #----------------------------------------------------------------------------
   add_note: Add Note
   save_note: Save Note
   add_note_help: Add a new note...
@@ -641,9 +588,6 @@ en-US:
   collapse_all: Collapse all
   expanded: Expanded
   collapsed: Collapsed
-
-  # Views -> Layout.
-  #----------------------------------------------------------------------------
   about: About
   about_dev_group: Discussion group for developers
   about_features: Features and bugs
@@ -660,17 +604,12 @@ en-US:
   logout: Logout
   quick_find: Quick find
   welcome: Welcome
-
-  # Advanced search
   accounts_advanced_search: Accounts Advanced search
   advanced_search: Advanced search
   basic_search: Basic search
   search_results_count:
     one: Search found %{count} result.
     other: Search found %{count} results.
-
-  # Views -> Comments.
-  #----------------------------------------------------------------------------
   comment: Comment
   edit_comment: Editing comment
   show: Show
@@ -680,34 +619,19 @@ en-US:
   subscribe_via_email: Subscribe via email
   disable_email_subscriptions: Disable email subscription
   added_note: added note %{value}
-
-  # Views -> Emails.
-  #----------------------------------------------------------------------------
-
-  # Views -> Passwords.
-  #----------------------------------------------------------------------------
   confirm_password_intro: Please type your new password and then confirm it.
   password_intro: Please specify your email address, and the instructions to reset
     your password will be sent to you.
   reset_password: Reset Password
   update_password_and_login: Update Password and Login
-
-  # Views -> Admin
-  #----------------------------------------------------------------------------
   back_to_crm: Back to Fat Free CRM
   crm_admin_page: Fat Free CRM Administration
-
-  # Views -> Admin -> Groups
-  #----------------------------------------------------------------------------
   create_group: Create Group
   save_group: Save Group
   group_members: members
   groups: Groups
   groups_small: groups
   group_small: group
-
-  # Views -> Admin -> Users
-  #----------------------------------------------------------------------------
   confirm_group_delete: Are you sure you wish to delete this group? There are %{count}
     items that still reference it.
   approve: Approve
@@ -732,9 +656,6 @@ en-US:
   user_suspended_on: suspended on %{value}
   users: Users
   users_small: users
-
-  # Views -> Versions
-  #----------------------------------------------------------------------------
   versions: History
   version:
     create: ! '%{item} created by %{by}'
@@ -749,32 +670,20 @@ en-US:
   user_id: User id
   created_at: Created at
   updated_at: Updated at
-
-  # Export.
-  #----------------------------------------------------------------------------
   to_xls: Export to Excel
   to_csv: Export to comma-delimited file format (including deleted records)
   to_rss: RSS feed
   to_atom: Atom feed
   to_perm: Permalink
-
-  # Dropbox.
-  #----------------------------------------------------------------------------
   dropbox_notification_subject: dropbox - Added email - %{subject}
   dropbox_notification_intro: Succesfully added the email you sent to dropbox
   dropbox_notification_to: Added to
   subject: Subject
   body: Body
-
-  # Comment Inbox
-  #----------------------------------------------------------------------------
   comment_notification:
     intro: ! '%{user_full_name} commented on %{entity_type}: %{entity_name}'
     reply_instructions: Reply to this email directly to add a new comment, or view
       the %{entity} online
-
-  # Lists
-  #----------------------------------------------------------------------------
   global_lists: Global lists
   personal_lists: My lists
   list: List
@@ -782,9 +691,6 @@ en-US:
   make_current_view_list: Make current view a list
   list_name_info: If you use the name of an existing list, you will overwrite that
     list with your current settings
-
-  # Pluralizations.
-  #----------------------------------------------------------------------------
   pluralize:
     comment:
       one: 1 comment
@@ -804,9 +710,6 @@ en-US:
     login:
       one: 1 login
       other: ! '%{count} logins'
-
-  # Custom date/time formats.
-  #----------------------------------------------------------------------------
   date:
     formats:
       mmddyyyy: ! '%m/%d/%Y'
@@ -816,9 +719,6 @@ en-US:
     formats:
       mmddhhss: ! '%b %e at %l:%M%p'
       mmddyyyy_hhmm: ! '%e %b %Y at %l:%M%p'
-
-  # will_paginate translations copied for 'en-US'
-  #----------------------------------------------------------------------------
   will_paginate:
     previous_label: ! '&#8592; Previous'
     next_label: Next &#8594;
@@ -829,9 +729,6 @@ en-US:
         one: Displaying 1 %{name}
         other: Displaying all %{count} %{plural}
       multi_page: Displaying %{plural} %{from} - %{to} of %{total} in total
-
-  # Views -> Admin -> Custom Fields
-  #----------------------------------------------------------------------------
   label: Label
   custom_fields: Custom Fields
   custom_field_options: Custom Field Options
@@ -857,8 +754,6 @@ en-US:
     field groups.
 
 '
-  # Views -> Admin -> Tags
-  #----------------------------------------------------------------------------
   admin_fields_info2: ! 'It is strongly recommended you restart your server after
     adding or removing any custom field.
 
@@ -869,9 +764,6 @@ en-US:
   create_tag: Create Tag
   save_tag: Save Tag
   field_group_tags: Field Groups shown for this Tag
-
-  # Views -> Admin -> Plugins
-  #----------------------------------------------------------------------------
   tag_with_taggings_confirm_delete: If this tag is deleted, it will be removed from
     %{value} records.
   msg_cant_delete_tag: Couldn't delete '%{value}' since it has associated Field Groups.
@@ -881,23 +773,14 @@ en-US:
         author: Author
         version: Version
         description: Description
-
-  # Simple Form translations
-  #----------------------------------------------------------------------------
   simple_form:
-    yes: 'Yes'
-    no: 'No'
+    true: 'Yes'
+    false: 'No'
     required:
       text: required
       mark: ! '*'
-      # You can uncomment the line below if you need to overwrite the whole required html.
-      # When using html, text and mark won't be used.
-      # html: '<abbr title="required">*</abbr>'
     error_notification:
       default_message: ! 'Some errors were found, please take a look:'
-
-  # Form field types
-  #----------------------------------------------------------------------------
   field_types:
     string:
       title: Short Answer
