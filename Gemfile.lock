@@ -1,3 +1,11 @@
+GIT
+  remote: git@github.com:unboxed/ffcrm_ldap.git
+  revision: 6bac5ce490a777e2d76d2eabf801fcbd53a60437
+  specs:
+    ffcrm_ldap (0.1.4)
+      fat_free_crm
+      net-ldap (~> 0.3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -104,10 +112,35 @@ GEM
     factory_girl_rails (4.4.1)
       factory_girl (~> 4.4.0)
       railties (>= 3.0.0)
+    fat_free_crm (0.13.2)
+      acts-as-taggable-on (~> 2.3.3)
+      acts_as_commentable (~> 3.0.1)
+      acts_as_list (~> 0.1.4)
+      authlogic (= 3.1.0)
+      cancan
+      cocaine
+      dynamic_form
+      email_reply_parser_ffcrm
+      ffaker (>= 1.12.0)
+      font-awesome-rails
+      haml (~> 3)
+      jquery-rails (~> 2.1.4)
+      nokogiri
+      paper_trail (~> 2.7.0)
+      paperclip
+      premailer
+      prototype-rails
+      psych (~> 1)
+      rails (~> 3.2.12)
+      rails3-jquery-autocomplete
+      ransack_ui (>= 1.1.0)
+      responds_to_parent (>= 1.1.0)
+      sass (~> 3)
+      select2-rails
+      simple_form (~> 2.0.1)
+      valium
+      will_paginate (~> 3.0.2)
     ffaker (1.24.0)
-    ffcrm_ldap (0.1.4)
-      fat_free_crm (~> 0.11.3)
-      net-ldap (~> 0.3.1)
     ffi (1.9.3)
     font-awesome-rails (4.0.3.2)
       railties (>= 3.2, < 5.0)
@@ -175,12 +208,15 @@ GEM
     premailer (1.8.2)
       css_parser (>= 1.3.5)
       htmlentities (>= 4.0.0)
+    prototype-rails (3.2.1)
+      rails (~> 3.2)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
     pry-rails (0.3.2)
       pry (>= 0.9.10)
+    psych (1.3.4)
     quiet_assets (1.0.2)
       railties (>= 3.1, < 5.0)
     rack (1.4.5)
@@ -295,9 +331,6 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    turbo-sprockets-rails3 (0.3.11)
-      railties (> 3.2.8, < 4.0.0)
-      sprockets (>= 2.2.0)
     tzinfo (0.3.39)
     uglifier (2.5.0)
       execjs (>= 0.3.0)
@@ -338,7 +371,7 @@ DEPENDENCIES
   execjs
   factory_girl_rails
   ffaker (>= 1.12.0)
-  ffcrm_ldap (~> 0.1.4)
+  ffcrm_ldap!
   font-awesome-rails
   guard
   guard-rails
@@ -352,6 +385,7 @@ DEPENDENCIES
   paperclip
   premailer
   pry-rails
+  psych (~> 1)
   quiet_assets
   rails (~> 3.2.12)
   rails3-jquery-autocomplete
@@ -372,7 +406,6 @@ DEPENDENCIES
   thin
   thor
   timecop
-  turbo-sprockets-rails3
   uglifier (>= 1.0.3)
   unicorn
   valium
