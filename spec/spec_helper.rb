@@ -11,8 +11,9 @@ require 'rspec/rails'
 require 'capybara/rails'
 
 require 'acts_as_fu'
-require 'factory_girl'
+require 'factory_girl_rails'
 require 'ffaker'
+require 'timecop'
 
 require 'coveralls'
 Coveralls.wear!
@@ -38,6 +39,7 @@ RSpec.configure do |config|
 
   # RSpec configuration options for Fat Free CRM.
   config.include RSpec::Rails::Matchers
+  config.include(FactoryGirl::Syntax::Methods)
 
   config.before(:each) do
     # Overwrite locale settings within "config/settings.yml" if necessary.

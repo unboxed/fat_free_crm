@@ -9,12 +9,22 @@ module FatFreeCRM
     # Return either Application or Engine,
     # depending on how Fat Free CRM has been loaded
     def application
-      defined?(FatFreeCRM::Engine) ? Engine : Application
+      engine? ? Engine : Application
     end
 
     def root
       application.root
     end
+
+    # Are we running as an engine?
+    def engine?
+      defined?(FatFreeCRM::Engine).present?
+    end
+
+    def application?
+      !engine?
+    end
+
   end
 end
 
@@ -28,7 +38,6 @@ require 'fat_free_crm/load_settings' # register load hook for Setting
 # Require gem dependencies, monkey patches, and vendored plugins (in lib)
 require "fat_free_crm/gem_dependencies"
 require "fat_free_crm/gem_ext"
-require "fat_free_crm/plugin_dependencies"
 
 require "fat_free_crm/custom_fields" # load hooks for Field
 require "fat_free_crm/version"
@@ -47,3 +56,6 @@ require "fat_free_crm/tabs"
 require "fat_free_crm/callback"
 require "fat_free_crm/plugin"
 require "fat_free_crm/view_factory"
+
+require "country_select"
+require "gravatar_image_tag"

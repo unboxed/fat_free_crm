@@ -6,17 +6,13 @@
 class HomeController < ApplicationController
   before_filter :require_user, :except => [ :toggle, :timezone ]
   before_filter :set_current_tab, :only => :index
-  before_filter "hook(:home_before_filter, self, :amazing => true)"
 
   #----------------------------------------------------------------------------
   def index
-    @hello = "Hello world" # The hook below can access controller's instance variables.
-    hook(:home_controller, self, :params => "it works!")
-
     @activities = get_activities
-    @my_tasks = Task.visible_on_dashboard(current_user).by_due_at
-    @my_opportunities = Opportunity.visible_on_dashboard(current_user).by_closes_on.by_amount
-    @my_accounts = Account.visible_on_dashboard(current_user).by_name
+    @my_tasks = Task.visible_on_dashboard(current_user).includes(:user, :asset).by_due_at
+    @my_opportunities = Opportunity.visible_on_dashboard(current_user).includes(:account, :user, :tags).by_closes_on.by_amount
+    @my_accounts = Account.visible_on_dashboard(current_user).includes(:user, :tags).by_name
     respond_with(@activities)
   end
 
@@ -32,15 +28,18 @@ class HomeController < ApplicationController
     end
   end
 
-  # POST /home/redraw                                                      AJAX
+  # GET /home/redraw                                                       AJAX
   #----------------------------------------------------------------------------
   def redraw
     current_user.pref[:activity_asset] = params[:asset] if params[:asset]
     current_user.pref[:activity_event] = params[:event] if params[:event]
     current_user.pref[:activity_user] = params[:user] if params[:user]
     current_user.pref[:activity_duration] = params[:duration] if params[:duration]
+    @activities = get_activities
 
-    render :index
+    respond_with(@activities) do |format|
+      format.js { render :index }
+    end
   end
 
   # GET /home/toggle                                                       AJAX
@@ -57,14 +56,19 @@ class HomeController < ApplicationController
   # GET /home/timeline                                                     AJAX
   #----------------------------------------------------------------------------
   def timeline
-    unless params[:type].empty?
-      model = params[:type].camelize.constantize
-      item = model.find(params[:id])
-      item.update_attribute(:state, params[:state])
-    else
-      comments, emails = params[:id].split("+")
-      Comment.update_all("state = '#{params[:state]}'", "id IN (#{comments})") unless comments.blank?
-      Email.update_all("state = '#{params[:state]}'", "id IN (#{emails})") unless emails.blank?
+    state = params[:state].to_s
+    if %w(Collapsed Expanded).include?(state)
+      if (model_type = params[:type].to_s).present?
+        if %w(comment email).include?(model_type)
+          model = model_type.camelize.constantize
+          item = model.find(params[:id])
+          item.update_attribute(:state, state)
+        end
+      else
+        comments, emails = params[:id].split("+")
+        Comment.where(:id => comments.split(',')).update_all(:state => state) unless comments.blank?
+        Email.where(:id => emails.split(',')).update_all(:state => state) unless emails.blank?
+      end
     end
 
     render :nothing => true
@@ -93,7 +97,7 @@ class HomeController < ApplicationController
     options[:duration] ||= activity_duration
     options[:max]      ||= 500
 
-    Version.latest(options).visible_to(current_user)
+    Version.includes(user: [:avatar]).latest(options).visible_to(current_user)
   end
 
   #----------------------------------------------------------------------------
@@ -117,6 +121,9 @@ class HomeController < ApplicationController
   end
 
   #----------------------------------------------------------------------------
+  # TODO: this is ugly, ugly code. It's being security patched now but urgently
+  # needs refactoring to use user id instead. Permuations based on name or email
+  # yield incorrect results.
   def activity_user
     user = current_user.pref[:activity_user]
     if user && user != "all_users"
@@ -125,12 +132,11 @@ class HomeController < ApplicationController
         else # first_name middle_name last_name any_name
           name_query = if user.include?(" ")
             user.name_permutations.map{ |first, last|
-              "(upper(first_name) LIKE upper('%#{first}%') AND upper(last_name) LIKE upper('%#{last}%'))"
-            }.join(" OR ")
+              User.where(:first_name => first, :last_name => last)
+            }.map(&:to_a).flatten.first
           else
-            "upper(first_name) LIKE upper('%#{user}%') OR upper(last_name) LIKE upper('%#{user}%')"
+            [User.where(:first_name => user), User.where(:last_name => user)].map(&:to_a).flatten.first
           end
-          User.where(name_query).first
         end
     end
     user.is_a?(User) ? user.id : nil
@@ -141,7 +147,7 @@ class HomeController < ApplicationController
     duration = current_user.pref[:activity_duration]
     if duration
       words = duration.split("_") # "two_weeks" => 2.weeks
-      if %w(one two).include?(words.first)
+      if %w(one two).include?(words.first) and %w(hour day days week weeks month).include?(words.last)
         %w(zero one two).index(words.first).send(words.last)
       end
     end

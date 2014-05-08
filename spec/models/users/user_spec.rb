@@ -182,9 +182,9 @@ describe User do
     end
 
     it "should update I18n.locale if proference[:locale] is set" do
-      @user.preference[:locale] = :esperanto
+      @user.preference[:locale] = :es
       @user.set_individual_locale
-      I18n.locale.should == :esperanto
+      I18n.locale.should == :es
     end
 
     it "should not update I18n.locale if proference[:locale] is not set" do
@@ -208,5 +208,19 @@ describe User do
       @user.set_single_access_token
       @user.single_access_token.should == "token"
     end
+  end
+
+  describe "serialization" do
+
+    let(:user) { FactoryGirl.build(:user) }
+
+    it "to json" do
+      expect(user.to_json).to eql([user.name].to_json)
+    end
+
+    it "to xml" do
+      expect(user.to_xml).to eql([user.name].to_xml)
+    end
+
   end
 end

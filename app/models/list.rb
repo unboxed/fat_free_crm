@@ -5,10 +5,13 @@
 #------------------------------------------------------------------------------
 class List < ActiveRecord::Base
   validates_presence_of :name
+  validates_presence_of :url
+  belongs_to :user
 
   # Parses the controller from the url
   def controller
-    (url || "").sub(/^\//,'').split(/\/|\?/).first
+    (url || "").sub(/\A\//,'').split(/\/|\?/).first
   end
+
   ActiveSupport.run_load_hooks(:fat_free_crm_list, self)
 end

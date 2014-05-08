@@ -1,7 +1,8 @@
 language: ruby
 rvm:
   - 1.9.3
-  - 1.9.2
+  - 2.0.0
+  - 2.1.1
 
 env:
   - DB=mysql
@@ -9,16 +10,6 @@ env:
   - DB=sqlite
 
 gemfile: Gemfile.ci
-
-# Only run a cross-section of 4 builds majoring on r1.9.3
-matrix:
-  exclude:
-    - rvm: 1.9.2
-      env: DB=sqlite
-      gemfile: Gemfile.ci
-    - rvm: 1.9.2
-      env: DB=postgres
-      gemfile: Gemfile.ci
 
 bundler_args: --path=vendor/bundle --without heroku
 
@@ -30,11 +21,10 @@ before_script:
   - sh -c "cp config/database.$DB.yml config/database.yml"
   - sh -c "if [ \"$DB\" = 'postgres' ]; then psql -c 'create database fat_free_crm_test;' -U postgres; fi"
   - sh -c "if [ \"$DB\" = 'mysql' ]; then mysql -e 'create database fat_free_crm_test;'; fi"
+  - sh -c "RAILS_ENV=test bundle exec rake db:schema:load"
 
 # Run specs
-script: "bundle exec rake"
-# Run specs & acceptance tests, and ensure that assets can compile without errors
-# script: "bundle exec rake && RAILS_ENV=production bundle exec rake assets:precompile:primary"
+script: "RAILS_ENV=test bundle exec rake"
 
 # To stop Travis from running tests for a new commit,
 # add the following to your commit message: [ci skip]

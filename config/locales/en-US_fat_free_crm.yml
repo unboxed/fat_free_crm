@@ -4,6 +4,7 @@ en-US:
 
   # Generic terms.
   #----------------------------------------------------------------------------
+  id: Id
   all: All
   at: at
   here: here
@@ -169,6 +170,15 @@ en-US:
           final_review: Final Review
           won: Closed/Won
           lost: Closed/Lost
+      account:
+        rating:
+          "0": "-"
+          "1": "★"
+          "2": "★★"
+          "3": "★★★"
+          "4": "★★★★"
+          "5": "★★★★★"
+
   msg_account_suspended: User account has been suspended.
   password_reset_instruction: password reset instructions
 
@@ -179,7 +189,7 @@ en-US:
   msg_account_not_approved: Your account has not been approved yet.
   msg_asset_deleted: ! '%{value} has been deleted.'
   msg_asset_not_available: This %{value} is no longer available.
-  msg_asset_not_authorized: You are not authorized to view this %{value}.
+  msg_not_authorized: You are not authorized to take this action.
   msg_assets_not_available: The %{value} are not available.
   msg_asset_rejected: ! '%{value} has been rejected.'
   msg_bad_image_file: ^Could't upload or resize the image file you specified.
@@ -373,6 +383,7 @@ en-US:
   was_supposed_to_finish: was supposed to finish on %{value}
   was_supposed_to_start: was supposed to start %{time_ago} ago on %{start_date}
   was_supposed_to_start_in: was supposed to start in %{starts_in} on %{start_date}
+  select_a_campaign: Select a campaign
 
   # Views -> Contacts.
   #----------------------------------------------------------------------------
@@ -583,8 +594,8 @@ en-US:
   save_note: Save Note
   add_note_help: Add a new note...
   edit_note: Edit Note
-  added_ago: added %{value} ago
-  added_by: added %{time_ago} ago by %{user}
+  added_ago: added %{value}
+  added_by: added %{time_ago} by %{user}
   back: Back
   cancel: Cancel
   close_form: Close form
@@ -668,6 +679,7 @@ en-US:
   notifications_tooltip: Subscribers will receive new comments via email
   subscribe_via_email: Subscribe via email
   disable_email_subscriptions: Disable email subscription
+  added_note: added note %{value}
 
   # Views -> Emails.
   #----------------------------------------------------------------------------
@@ -701,6 +713,7 @@ en-US:
   approve: Approve
   create_user: Create User
   last_seen: last seen %{value} ago
+  last_seen2: last seen %{value}
   personal_information: Personal Information
   group_memberships: Group Memberships
   reactivate: Reactivate
@@ -762,7 +775,8 @@ en-US:
 
   # Lists
   #----------------------------------------------------------------------------
-  lists: Lists
+  global_lists: Global lists
+  personal_lists: My lists
   list: List
   no_saved_lists: No saved lists
   make_current_view_list: Make current view a list

@@ -38,35 +38,33 @@ class Opportunity < ActiveRecord::Base
 
   serialize :subscribed_users, Set
 
-  scope :state, lambda { |filters|
+  scope :state, ->(filters) {
     where('stage IN (?)' + (filters.delete('other') ? ' OR stage IS NULL' : ''), filters)
   }
-  scope :created_by,  lambda { |user| where('user_id = ?', user.id) }
-  scope :assigned_to, lambda { |user| where('assigned_to = ?', user.id) }
-  scope :won,         where("opportunities.stage = 'won'")
-  scope :lost,        where("opportunities.stage = 'lost'")
-  scope :not_lost,    where("opportunities.stage <> 'lost'")
-  scope :pipeline,    where("opportunities.stage IS NULL OR (opportunities.stage != 'won' AND opportunities.stage != 'lost')")
-  scope :unassigned,  where("opportunities.assigned_to IS NULL")
+  scope :created_by,  ->(user) { where('user_id = ?', user.id) }
+  scope :assigned_to, ->(user) { where('assigned_to = ?', user.id) }
+  scope :won,         -> { where("opportunities.stage = 'won'") }
+  scope :lost,        -> { where("opportunities.stage = 'lost'") }
+  scope :not_lost,    -> { where("opportunities.stage <> 'lost'") }
+  scope :pipeline,    -> { where("opportunities.stage IS NULL OR (opportunities.stage != 'won' AND opportunities.stage != 'lost')") }
+  scope :unassigned,  -> { where("opportunities.assigned_to IS NULL") }
 
   # Search by name OR id
-  scope :text_search, lambda { |query|
-    # postgresql does not like to compare string to integer field
-    if query =~ /^\d+$/
-      query = query.gsub(/[^\w\s\-\.'\p{L}]/u, '').strip
+  scope :text_search, ->(query) {
+    if query =~ /\A\d+\z/
       where('upper(name) LIKE upper(:name) OR opportunities.id = :id', :name => "%#{query}%", :id => query)
     else
       search('name_cont' => query).result
     end
   }
 
-  scope :visible_on_dashboard, lambda { |user|
+  scope :visible_on_dashboard, ->(user) {
     # Show opportunities which either belong to the user and are unassigned, or are assigned to the user and haven't been closed (won/lost)
     where('(user_id = :user_id AND assigned_to IS NULL) OR assigned_to = :user_id', :user_id => user.id).where("opportunities.stage != 'won'").where("opportunities.stage != 'lost'")
   }
 
-  scope :by_closes_on, order(:closes_on)
-  scope :by_amount, order('opportunities.amount DESC')
+  scope :by_closes_on, -> { order(:closes_on) }
+  scope :by_amount,    -> { order('opportunities.amount DESC') }
 
   uses_user_permissions
   acts_as_commentable
@@ -80,16 +78,11 @@ class Opportunity < ActiveRecord::Base
   has_ransackable_associations %w(account contacts tags campaign activities emails comments)
   ransack_can_autocomplete
 
-  validates :stage, :inclusion => { :in => Setting.unroll(:opportunity_stage).map{|s| s.last.to_s } }
+  validates :stage, :inclusion => { :in => Proc.new { Setting.unroll(:opportunity_stage).map{|s| s.last.to_s } } }
 
   validates_presence_of :name, :message => :missing_opportunity_name
   validates_numericality_of [ :probability, :amount, :discount ], :allow_nil => true
   validate :users_for_shared_access
-
-  # Validate presence of account_opportunity unless the opportunity is deleted [with has_paper_trail],
-  # in which case the account_opportunity will still exist but will be in a deleted state.
-  # validates :account_opportunity, :presence => true, :unless => Proc.new { |o| o.destroyed? }
-  # TODO: Mike, what do you think about the above validation?
 
   after_create  :increment_opportunities_count
   after_destroy :decrement_opportunities_count

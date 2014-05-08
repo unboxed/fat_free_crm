@@ -22,14 +22,17 @@ module AccountsHelper
     ].join(', ')
   end
 
+  # Generates a select list with the first 25 accounts
+  # and prepends the currently selected account, if any.
+  #----------------------------------------------------------------------------
   def account_select(options = {})
-      # Generates a select list with the first 25 accounts,
-      # and prepends the currently selected account, if available
       options[:selected] = (@account && @account.id) || 0
       accounts = ([@account] + Account.my.order(:name).limit(25)).compact.uniq
       collection_select :account, :id, accounts, :id, :name, options,
                         {:"data-placeholder" => t(:select_an_account),
-                         :style => "width:330px; display:none;" }
+                         :"data-url" => auto_complete_accounts_path(format: 'json'),
+                         :style => "width:330px; display:none;",
+                         :class => 'ajax_chosen' }
   end
 
   # Select an existing account or create a new one.
@@ -42,11 +45,11 @@ module AccountsHelper
       t(:account).html_safe +
 
       content_tag(:span, :id => 'account_create_title') do
-        "(#{t :create_new} #{t :or} <a href='#' onclick='crm.select_account(1); return false;'>#{t :select_existing}</a>):".html_safe
+        "(#{t :create_new} #{t :or} <a href='#' onclick='crm.select_account(); return false;'>#{t :select_existing}</a>):".html_safe
       end.html_safe +
 
       content_tag(:span, :id => 'account_select_title') do
-        "(<a href='#' onclick='crm.create_account(1); return false;'>#{t :create_new}</a> #{t :or} #{t :select_existing}):".html_safe
+        "(<a href='#' onclick='crm.create_account(); return false;'>#{t :create_new}</a> #{t :or} #{t :select_existing}):".html_safe
       end.html_safe +
 
       content_tag(:span, ':', :id => 'account_disabled_title').html_safe

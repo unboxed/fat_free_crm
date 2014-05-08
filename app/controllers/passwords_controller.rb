@@ -44,8 +44,9 @@ class PasswordsController < ApplicationController
     end
   end
 
-  #----------------------------------------------------------------------------
   private
+
+  #----------------------------------------------------------------------------
   def load_user_using_perishable_token
     @user = User.find_using_perishable_token(params[:id])
     unless @user
@@ -60,7 +61,6 @@ class PasswordsController < ApplicationController
   #----------------------------------------------------------------------------
   def empty_password?
     (params[:user][:password] == params[:user][:password_confirmation]) &&
-    (params[:user][:password] =~ /^\s*$/)
+    (params[:user][:password].blank?)      # "   ".blank? == true
   end
 end
-

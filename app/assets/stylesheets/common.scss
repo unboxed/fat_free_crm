@@ -185,7 +185,13 @@ $sidebar_width: 210px;
         display: block;
         padding-top: 2px;
         input {
-          margin-right: 5px; } } } } }
+          margin-right: 5px; } }
+      div.input.radio_buttons > span {
+        display: block;
+        padding-top: 2px;
+        label { vertical-align: middle; margin-left: 5px; }
+        input {
+          margin-left: 5px; } } } } }
 
 .remote {
   border: 5px lightblue solid;
@@ -433,7 +439,6 @@ $sidebar_width: 210px;
   padding: 8px 0px 7px 0px;
   li {
     border-bottom: 1px silver dotted;
-    clear: both;
     color: #3f3f3f;
     font-size: 12px;
     list-style: none;
@@ -674,25 +679,11 @@ span.handle img {
 .field_group .list {
   padding-bottom: 30px; }
 
-#lists {
-  .show_lists_save_form {
-    text-align: right; }
-  .show_lists_save_form, .save_list {
-    margin: 10px 0 0; }
-  .list_icon {
-    opacity: 0.5;
-    width: 12px; }
-  img.input_info {
-    vertical-align: middle; }
-  input#save_list {
-    margin-top: 6px; } }
-
 .fields .subtitle {
   cursor: move; }
 
 .fields .title {
   margin-bottom: 12px; }
-
 
 ul.tools {
   display: inline;
@@ -741,5 +732,34 @@ table.asset_attributes {
   }
   td.last, th.last {
     border-bottom: none;
+  }
+}
+
+.spinner {
+  margin: 7px 4px 0px 4px;
+  float: right;
+}
+
+.comment .spinner {
+  margin: 5px 4px 0px 4px;
+  float: left;
+}
+
+.comment .buttons {
+  padding-left: 40px;
+}
+
+// Jumpbox
+
+.ui-menu-item > a:not(.ui-state-focus) {
+  span.jumpbox-highlight {
+    background-color: lightyellow;
+    font-weight: bold;
+  }
+}
+
+.ui-state-focus {
+  span.jumpbox-highlight {
+    background-color: darkgray;
   }
 }
