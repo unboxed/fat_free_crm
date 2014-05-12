@@ -1,23 +1,11 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 if defined?(RSpec)
   require 'rspec/core/rake_task'
-  
+
   namespace :spec do
     desc "Preparing test env"
     task :prepare do
@@ -33,8 +21,4 @@ if defined?(RSpec)
   Rake::Task["spec"].prerequisites.clear
   Rake::Task["spec"].prerequisites.push("spec:prepare")
 
-  desc 'Run the acceptance specs in ./acceptance'
-  RSpec::Core::RakeTask.new(:acceptance => 'spec:prepare') do |t|
-    t.pattern = 'acceptance/**/*_spec.rb'
-  end
 end

@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe CampaignsController do
@@ -301,7 +306,7 @@ describe CampaignsController do
 
       it "should expose a newly created campaign as @campaign and render [create] template" do
         @campaign = FactoryGirl.build(:campaign, :name => "Hello", :user => current_user)
-        Campaign.stub!(:new).and_return(@campaign)
+        Campaign.stub(:new).and_return(@campaign)
 
         xhr :post, :create, :campaign => { :name => "Hello" }
         assigns(:campaign).should == @campaign
@@ -310,7 +315,7 @@ describe CampaignsController do
 
       it "should get data to update campaign sidebar" do
         @campaign = FactoryGirl.build(:campaign, :name => "Hello", :user => current_user)
-        Campaign.stub!(:new).and_return(@campaign)
+        Campaign.stub(:new).and_return(@campaign)
 
         xhr :post, :create, :campaign => { :name => "Hello" }
         assigns[:campaign_status_total].should be_instance_of(HashWithIndifferentAccess)
@@ -318,7 +323,7 @@ describe CampaignsController do
 
       it "should reload campaigns to update pagination" do
         @campaign = FactoryGirl.build(:campaign, :user => current_user)
-        Campaign.stub!(:new).and_return(@campaign)
+        Campaign.stub(:new).and_return(@campaign)
 
         xhr :post, :create, :campaign => { :name => "Hello" }
         assigns[:campaigns].should == [ @campaign ]
@@ -326,7 +331,7 @@ describe CampaignsController do
 
       it "should add a new comment to the newly created campaign when specified" do
         @campaign = FactoryGirl.build(:campaign, :name => "Hello world", :user => current_user)
-        Campaign.stub!(:new).and_return(@campaign)
+        Campaign.stub(:new).and_return(@campaign)
 
         xhr :post, :create, :campaign => { :name => "Hello world" }, :comment_body => "Awesome comment is awesome"
         @campaign.reload.comments.map(&:comment).should include("Awesome comment is awesome")
@@ -337,7 +342,7 @@ describe CampaignsController do
 
       it "should expose a newly created but unsaved campaign as @campaign and still render [create] template" do
         @campaign = FactoryGirl.build(:campaign, :id => nil, :name => nil, :user => current_user)
-        Campaign.stub!(:new).and_return(@campaign)
+        Campaign.stub(:new).and_return(@campaign)
 
         xhr :post, :create, :campaign => nil
         assigns(:campaign).should == @campaign
@@ -600,18 +605,18 @@ describe CampaignsController do
     it_should_behave_like("auto complete")
   end
 
-  # POST /campaigns/redraw                                                 AJAX
+  # GET  /campaigns/redraw                                                 AJAX
   #----------------------------------------------------------------------------
-  describe "responding to POST redraw" do
+  describe "responding to GET redraw" do
     it "should save user selected campaign preference" do
-      xhr :post, :redraw, :per_page => 42, :view => "brief", :sort_by => "name"
+      xhr :get, :redraw, :per_page => 42, :view => "brief", :sort_by => "name"
       current_user.preference[:campaigns_per_page].should == "42"
       current_user.preference[:campaigns_index_view].should  == "brief"
       current_user.preference[:campaigns_sort_by].should  == "campaigns.name ASC"
     end
 
     it "should reset current page to 1" do
-      xhr :post, :redraw, :per_page => 42, :view => "brief", :sort_by => "name"
+      xhr :get, :redraw, :per_page => 42, :view => "brief", :sort_by => "name"
       session[:campaigns_current_page].should == 1
     end
 
@@ -621,7 +626,7 @@ describe CampaignsController do
         FactoryGirl.create(:campaign, :name => "B", :user => current_user)
       ]
 
-      xhr :post, :redraw, :per_page => 1, :sort_by => "name"
+      xhr :get, :redraw, :per_page => 1, :sort_by => "name"
       assigns(:campaigns).should == [ @campaigns.first ]
       response.should render_template("campaigns/index")
     end

@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 class EntityObserver < ActiveRecord::Observer
   observe :account, :contact, :lead, :opportunity
 
@@ -14,7 +19,14 @@ class EntityObserver < ActiveRecord::Observer
   private
 
   def send_notification_to_assignee(item)
-    UserMailer.assigned_entity_notification(item, current_user).deliver if item.assignee.present? && current_user.present?
+    if item.assignee.present? && current_user.present? && can_send_email?
+      UserMailer.assigned_entity_notification(item, current_user).deliver
+    end
+  end
+
+  # Need to have a host set before email can be sent
+  def can_send_email?
+    Setting.host.present?
   end
 
   def current_user
@@ -26,4 +38,6 @@ class EntityObserver < ActiveRecord::Observer
       User.find_by_id(user_id_or_user.to_i)
     end
   end
+
+  ActiveSupport.run_load_hooks(:fat_free_crm_entity_observer, self)
 end

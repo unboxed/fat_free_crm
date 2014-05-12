@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 # == Schema Information
 #
 # Table name: fields
@@ -47,7 +52,7 @@ describe Field do
       :label => "Availability",
       :name  => "availability"
     )
-    object = mock('Object')
+    object = double('Object')
 
     #  as  |  value  |  expected
     [["check_boxes", [1, 2, 3],               "1, 2<br />3"],
@@ -55,7 +60,7 @@ describe Field do
      ["checkbox",    1,                       "yes"],
      ["date",        DateTime.new(2011,4,19), DateTime.new(2011,4,19).strftime(I18n.t("date.formats.mmddyy")) ]].each do |as, value, expected|
       field.as = as
-      object.stub!(field.name).and_return(value)
+      object.stub(field.name).and_return(value)
       field.render_value(object).should == expected
     end
   end

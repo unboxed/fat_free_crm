@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class UserMailer < ActionMailer::Base
 
   def password_reset_instructions(user)
@@ -22,7 +10,7 @@ class UserMailer < ActionMailer::Base
 
     mail :subject => "Fat Free CRM: " + I18n.t(:password_reset_instruction),
          :to => user.email,
-         :from => "Fat Free CRM <noreply@fatfreecrm.com>",
+         :from => from_address,
          :date => Time.now
   end
 
@@ -33,8 +21,14 @@ class UserMailer < ActionMailer::Base
     @assigner_name = assigner.name
     mail :subject => "Fat Free CRM: You have been assigned #{@entity_name} #{@entity_type}",
          :to => entity.assignee.email,
-         :from => "Fat Free CRM <notifications@fatfreecrm.com>"
+         :from => from_address
+  end
+
+  private
+
+  def from_address
+    from = Setting.smtp[:from]
+    !from.blank? ? from : "Fat Free CRM <noreply@fatfreecrm.com>"
   end
 
 end
-

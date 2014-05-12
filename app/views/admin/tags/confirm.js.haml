@@ -1,0 +1,7 @@
+- id = dom_id(@tag, :confirm)
+
+if ($('##{id}').size() > 0) {
+crm.flick('#{id}', 'remove');
+} else {
+$('##{dom_id(@tag)}').prepend('#{ j (render :partial => "confirm") }');
+}

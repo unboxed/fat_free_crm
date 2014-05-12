@@ -1,18 +1,7 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
 
 module FatFreeCRM
@@ -20,12 +9,22 @@ module FatFreeCRM
     # Return either Application or Engine,
     # depending on how Fat Free CRM has been loaded
     def application
-      defined?(FatFreeCRM::Engine) ? Engine : Application
+      engine? ? Engine : Application
     end
 
     def root
       application.root
     end
+
+    # Are we running as an engine?
+    def engine?
+      defined?(FatFreeCRM::Engine).present?
+    end
+
+    def application?
+      !engine?
+    end
+
   end
 end
 
@@ -34,18 +33,18 @@ unless defined?(FatFreeCRM::Application)
   require 'fat_free_crm/engine'
 end
 
-# Our settings.yml structure requires the Syck YAML parser
-require 'fat_free_crm/syck_yaml'
+require 'fat_free_crm/load_settings' # register load hook for Setting
 
 # Require gem dependencies, monkey patches, and vendored plugins (in lib)
 require "fat_free_crm/gem_dependencies"
 require "fat_free_crm/gem_ext"
-require "fat_free_crm/plugin_dependencies"
 
+require "fat_free_crm/custom_fields" # load hooks for Field
 require "fat_free_crm/version"
 require "fat_free_crm/core_ext"
 require "fat_free_crm/comment_extensions"
 require "fat_free_crm/exceptions"
+require "fat_free_crm/export_csv"
 require "fat_free_crm/errors"
 require "fat_free_crm/i18n"
 require "fat_free_crm/permissions"
@@ -57,3 +56,6 @@ require "fat_free_crm/tabs"
 require "fat_free_crm/callback"
 require "fat_free_crm/plugin"
 require "fat_free_crm/view_factory"
+
+require "country_select"
+require "gravatar_image_tag"

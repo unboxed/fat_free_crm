@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 # == Schema Information
 #
 # Table name: fields
@@ -44,7 +49,7 @@ describe CustomField do
     columns = []
     %w(cf_test_field cf_test_field_2 cf_test_field_3 cf_test_field_4).each do |field|
       c.send(:generate_column_name).should == field
-      c.stub!(:klass_column_names).and_return( columns << field )
+      c.stub(:klass_column_names).and_return( columns << field )
     end
 
   end
@@ -107,16 +112,16 @@ describe CustomField do
   
     it "should have errors if custom field is required" do
       event = CustomField.new(:name => 'cf_event', :required => true)
-      foo = mock(:cf_event => nil)
-      err = mock(:errors); err.stub(:add)
+      foo = double(:cf_event => nil)
+      err = double(:errors); err.stub(:add)
       foo.should_receive(:errors).and_return(err)
       event.custom_validator(foo)
     end
     
     it "should have errors if custom field is longer than maxlength" do
       event = CustomField.new(:name => 'cf_event', :maxlength => 5)
-      foo = mock(:cf_event => "This is too long")
-      err = mock(:errors); err.stub(:add)
+      foo = double(:cf_event => "This is too long")
+      err = double(:errors); err.stub(:add)
       foo.should_receive(:errors).and_return(err)
       event.custom_validator(foo)
     end

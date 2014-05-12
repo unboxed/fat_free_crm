@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 module FatFreeCRM
   module Permissions
 
@@ -56,7 +44,6 @@ module FatFreeCRM
             if access != "Shared"
               remove_permissions
             else
-              value.map!{|c| c.split(',')} if value.map{|v| v.to_s.include?(',')}.any? # fix for a bug in "Chosen" which gives values like ["", "1,2,3"] 
               value = value.flatten.reject(&:blank?).uniq.map(&:to_i)
               permissions_to_remove = Permission.find_all_by_#{model}_id_and_asset_id_and_asset_type(self.#{model}_ids - value, self.id, self.class)
               permissions_to_remove.each {|p| (permissions.delete(p); p.destroy)}
@@ -69,7 +56,7 @@ module FatFreeCRM
           end
         }
       end
-      
+
       # Remove all shared permissions if no longer shared
       #--------------------------------------------------------------------------
       def access=(value)
@@ -107,7 +94,7 @@ module FatFreeCRM
         self.group_ids = model.group_ids
         save
       end
-      
+
     end
 
     module SingletonMethods

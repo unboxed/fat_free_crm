@@ -1,24 +1,11 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 require 'rails/all'
 require 'jquery-rails'
 require 'select2-rails'
-require 'prototype-rails'
 require 'haml'
 require 'sass'
 require 'acts_as_commentable'
@@ -30,8 +17,6 @@ require 'paperclip'
 require 'simple_form'
 require 'will_paginate'
 require 'authlogic'
-require 'chosen-rails'
-require 'ajax-chosen-rails'
 require 'ransack'
 require 'ransack_ui'
 require 'paper_trail'
@@ -41,6 +26,8 @@ require 'valium'
 require 'ffaker'
 require 'premailer'
 require 'nokogiri'
+require 'font-awesome-rails'
+require 'thor'
 
 # Load redcloth if available (for textile markup in emails)
 begin

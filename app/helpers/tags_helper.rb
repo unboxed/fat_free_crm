@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 module TagsHelper
 
   # Generate tag links for use on asset index pages.
@@ -34,18 +22,10 @@ module TagsHelper
 
   def tags_for_dashboard(model)
     content_tag(:ul) do
-      model.tag_list.each do |tag|
-        concat(content_tag(:li, tag))
+      model.tags.each do |tag|
+        concat(content_tag(:li, tag.name))
       end
     end.html_safe
-  end
-
-  # Generate tag links for the asset landing page (shown on a sidebar).
-  #----------------------------------------------------------------------------
-  def tags_for_show(model)
-    model.tag_list.inject([]) do |arr, tag|
-      arr << link_to(tag, url_for(:action => "tagged", :id => tag), :title => tag)
-    end.join(" ").html_safe
   end
 
 end

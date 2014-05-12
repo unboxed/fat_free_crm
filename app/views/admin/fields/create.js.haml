@@ -1,0 +1,17 @@
+- id = "create_field_field_group_#{@field.field_group_id}";
+- custom_field_id = "custom_field_#{@field.id}";
+- container_id = "fields_field_group_#{@field.field_group_id}";
+- create_field_id = "create_field_field_group_#{@field.field_group_id}";
+- empty_field_id = "empty_opportunity_field_group_#{@field.field_group_id}"
+
+- if @field.valid?
+  $("##{id}_arrow").html(crm.COLLAPSED)
+  $('##{container_id}').append('#{ j (render :partial => "field", :collection => [@field]) }')
+  $('##{custom_field_id}').effect("highlight", { duration:1500 });
+  $("##{create_field_id}").hide();
+  $("##{empty_field_id}").hide();
+  $('##{container_id}').sortable('reset');
+- else
+  $('##{id}').html('#{ j render(:partial => "admin/fields/form", :locals => {:field_group_id => @field.field_group_id}) }')
+  $('##{id}').effect("shake", { duration:250, distance: 6 });
+  $('##{id}').find('input[type="text"]').first().focus()

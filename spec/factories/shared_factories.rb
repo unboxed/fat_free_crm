@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 FactoryGirl.define do
   factory :version do
     whodunnit           ""
@@ -58,9 +63,7 @@ FactoryGirl.define do
   factory :avatar do
     user
     entity              { raise "Please specify :entity for the avatar" }
-    image_file_size     nil
-    image_file_name     nil
-    image_content_type  nil
+    image               { File.new(Rails.root.join('spec', 'fixtures', 'rails.png')) }
     updated_at          { FactoryGirl.generate(:time) }
     created_at          { FactoryGirl.generate(:time) }
   end

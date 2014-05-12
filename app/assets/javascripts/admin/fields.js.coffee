@@ -1,25 +1,30 @@
-###
-  Fat Free CRM
-  Copyright (C) 2008-2011 by Michael Dvorkin
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Affero General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU Affero General Public License for more details.
-
-  You should have received a copy of the GNU Affero General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ------------------------------------------------------------------------------
-###
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 
 (($) ->
 
-  $('.fields select[name="field[as]"]').live 'change', ->
+  #----------------------------------------------------------------------------
+  # Custom field tabs switcher
+  $(document).on "click", "*[data-tab-class]", (event) ->
+    event.preventDefault()
+    $el = $(this)
+
+    $(".fields").each ->
+      $(this).hide()
+
+    $(".inline_tabs ul li").each ->
+      $(this).removeClass "selected"
+
+    klass = $el.data("tab-class")
+    $("#" + klass + "_section").show()
+    $el.addClass "selected"
+
+  #----------------------------------------------------------------------------
+  # Load custom field subform
+  $(document).on 'change', '.fields select[name="field[as]"]', ->
     $.ajax(
         url: '/admin/fields/subform?' + $(this).parents('form').serialize()
         dataType: 'html'
@@ -29,21 +34,26 @@
           $(this).find('input').first().focus()
     )
 
-  $('.fields a.create').live 'click', ->
+  #----------------------------------------------------------------------------
+  # Open new field form
+  $(document).on 'click', '.fields a.create', ->
     $('.edit_field').hide()
     field_group = $(this).closest('.field_group')
     field_group.find('.empty').hide()
-    field_group.find('.arrow').html(crm.EXPANDED)
+    field_group.find('.create .arrow').html(crm.EXPANDED)
     field_group.find('.create_field').slideDown().find('input[name="field[label]"]').focus()
     false
 
-  $('.create_field a.close, .create_field a.cancel').live 'click', ->
+  #----------------------------------------------------------------------------
+  # Close new field form
+  $(document).on 'click', '.create_field a.close, .create_field a.cancel', ->
     $(this).closest('.create_field').hide()
-    $(this).closest('.field_group').find('.empty').show()
-    $(this).closest('.field_group').find('.arrow').html(crm.COLLAPSED)
+    $(this).closest('.field_group').find('.create .arrow').html(crm.COLLAPSED)
     false
 
-  $('.fields a.edit').live 'click', ->
+  #----------------------------------------------------------------------------
+  # Edit an existing field
+  $(document).on 'click', '.fields a.edit', ->
     $('.edit_field').hide()
     $.ajax(
         url: $(this).attr('href')
@@ -52,11 +62,11 @@
           $(this).replaceWith(data).first().focus()
     )
     false
-    
-  $('.edit_field a.close, .edit_field a.cancel').live 'click', ->
+
+  #----------------------------------------------------------------------------
+  # Close edit field form
+  $(document).on 'click', '.edit_field a.close, .edit_field a.cancel', ->
     $(this).closest('.edit_field').hide()
     false
-
-  false
 
 ) jQuery

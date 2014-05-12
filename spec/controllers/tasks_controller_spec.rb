@@ -1,10 +1,15 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe TasksController do
 
   def update_sidebar
     @task_total = { :key => :value, :pairs => :etc }
-    Task.stub!(:totals).and_return(@task_total)
+    Task.stub(:totals).and_return(@task_total)
   end
 
   def produce_tasks(user, view)
@@ -74,9 +79,7 @@ describe TasksController do
 
       it "should render all tasks as JSON for #{view} view" do
         @tasks = produce_tasks(current_user, view)
-
-        request.env["HTTP_ACCEPT"] = "application/json"
-        get :index, :view => view
+        get :index, :view => view, :format => :json
 
         (assigns[:tasks].keys.map(&:to_sym) - @tasks.keys).should == []
         (assigns[:tasks].values.flatten - @tasks.values.flatten).should == []
@@ -93,9 +96,7 @@ describe TasksController do
 
       it "should render all tasks as xml for #{view} view" do
         @tasks = produce_tasks(current_user, view)
-
-        request.env["HTTP_ACCEPT"] = "application/xml"
-        get :index, :view => view
+        get :index, :view => view, :format => :xml
 
         (assigns[:tasks].keys.map(&:to_sym) - @tasks.keys).should == []
         (assigns[:tasks].values.flatten - @tasks.values.flatten).should == []
@@ -119,7 +120,7 @@ describe TasksController do
     TASK_STATUSES.each do |view|
 
       it "should render the requested task as JSON for #{view} view" do
-        Task.stub_chain(:tracked_by, :find).and_return(task = mock("Task"))
+        Task.stub_chain(:tracked_by, :find).and_return(task = double("Task"))
         task.should_receive(:to_json).and_return("generated JSON")
 
         request.env["HTTP_ACCEPT"] = "application/json"
@@ -128,7 +129,7 @@ describe TasksController do
       end
 
       it "should render the requested task as xml for #{view} view" do
-        Task.stub_chain(:tracked_by, :find).and_return(task = mock("Task"))
+        Task.stub_chain(:tracked_by, :find).and_return(task = double("Task"))
         task.should_receive(:to_xml).and_return("generated XML")
 
         request.env["HTTP_ACCEPT"] = "application/xml"
@@ -146,7 +147,7 @@ describe TasksController do
     it "should expose a new task as @task and render [new] template" do
       account = FactoryGirl.create(:account, :user => current_user)
       @task = FactoryGirl.build(:task, :user => current_user, :asset => account)
-      Task.stub!(:new).and_return(@task)
+      Task.stub(:new).and_return(@task)
       @bucket = Setting.unroll(:task_bucket)[1..-1] << [ "On Specific Date...", :specific_time ]
       @category = Setting.unroll(:task_category)
 
@@ -267,7 +268,7 @@ describe TasksController do
 
       it "should expose a newly created task as @task and render [create] template" do
         @task = FactoryGirl.build(:task, :user => current_user)
-        Task.stub!(:new).and_return(@task)
+        Task.stub(:new).and_return(@task)
 
         xhr :post, :create, :task => { :name => "Hello world" }
         assigns(:task).should == @task
@@ -279,7 +280,7 @@ describe TasksController do
       [ "", "?view=pending", "?view=assigned", "?view=completed" ].each do |view|
         it "should update tasks sidebar when [create] is being called from [/tasks#{view}] page" do
           @task = FactoryGirl.build(:task, :user => current_user)
-          Task.stub!(:new).and_return(@task)
+          Task.stub(:new).and_return(@task)
 
           request.env["HTTP_REFERER"] = "http://localhost/tasks#{view}"
           xhr :post, :create, :task => { :name => "Hello world" }
@@ -292,7 +293,7 @@ describe TasksController do
 
       it "should expose a newly created but unsaved task as @lead and still render [create] template" do
         @task = FactoryGirl.build(:task, :name => nil, :user => current_user)
-        Task.stub!(:new).and_return(@task)
+        Task.stub(:new).and_return(@task)
 
         xhr :post, :create, :task => {}
         assigns(:task).should == @task

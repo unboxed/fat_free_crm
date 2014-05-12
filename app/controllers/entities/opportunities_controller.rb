@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class OpportunitiesController < EntitiesController
   before_filter :load_settings
   before_filter :get_data_for_sidebar, :only => :index
@@ -27,6 +15,7 @@ class OpportunitiesController < EntitiesController
 
     respond_with @opportunities do |format|
       format.xls { render :layout => 'header' }
+      format.csv { render :csv => @opportunities }
     end
   end
 
@@ -50,6 +39,8 @@ class OpportunitiesController < EntitiesController
       model, id = params[:related].split('_')
       if related = model.classify.constantize.my.find_by_id(id)
         instance_variable_set("@#{model}", related)
+        @account = related.account if related.respond_to?(:account) && !related.account.nil?
+        @campaign = related.campaign if related.respond_to?(:campaign)
       else
         respond_to_related_not_found(model) and return
       end
@@ -91,7 +82,7 @@ class OpportunitiesController < EntitiesController
         unless params[:account][:id].blank?
           @account = Account.find(params[:account][:id])
         else
-          if request.referer =~ /\/accounts\/(.+)$/
+          if request.referer =~ /\/accounts\/(\d+)\z/
             @account = Account.find($1) # related account
           else
             @account = Account.new(:user => current_user)
@@ -154,12 +145,12 @@ class OpportunitiesController < EntitiesController
   #----------------------------------------------------------------------------
   # Handled by ApplicationController :auto_complete
 
-  # POST /opportunities/redraw                                             AJAX
+  # GET /opportunities/redraw                                              AJAX
   #----------------------------------------------------------------------------
   def redraw
     @opportunities = get_opportunities(:page => 1, :per_page => params[:per_page])
     set_options # Refresh options
-    
+
     respond_with(@opportunities) do |format|
       format.js { render :index }
     end
@@ -192,7 +183,7 @@ private
       else # Called from related asset.
         self.current_page = 1
       end
-      # At this point render destroy.js.rjs
+      # At this point render destroy.js
     else
       self.current_page = 1
       flash[:notice] = t(:msg_asset_deleted, @opportunity.name)

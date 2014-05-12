@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 # == Schema Information
 #
 # Table name: campaigns
@@ -44,20 +32,20 @@
 class Campaign < ActiveRecord::Base
   belongs_to  :user
   belongs_to  :assignee, :class_name => "User", :foreign_key => :assigned_to
-  has_many    :tasks, :as => :asset, :dependent => :destroy#, :order => 'created_at DESC'
+  has_many    :tasks, :as => :asset, :dependent => :destroy
   has_many    :leads, :dependent => :destroy, :order => "id DESC"
   has_many    :opportunities, :dependent => :destroy, :order => "id DESC"
   has_many    :emails, :as => :mediator
 
   serialize :subscribed_users, Set
 
-  scope :state, lambda { |filters|
+  scope :state, ->(filters) {
     where('status IN (?)' + (filters.delete('other') ? ' OR status IS NULL' : ''), filters)
   }
-  scope :created_by, lambda { |user| where('user_id = ?' , user.id) }
-  scope :assigned_to, lambda { |user| where('assigned_to = ?', user.id) }
+  scope :created_by,  ->(user) { where( user_id: user.id ) }
+  scope :assigned_to, ->(user) { where( assigned_to: user.id ) }
 
-  scope :text_search, lambda { |query| search('name_cont' => query).result }
+  scope :text_search, ->(query) { search('name_cont' => query).result }
 
   uses_user_permissions
   acts_as_commentable
@@ -119,5 +107,7 @@ class Campaign < ActiveRecord::Base
   def users_for_shared_access
     errors.add(:access, :share_campaign) if self[:access] == "Shared" && !self.permissions.any?
   end
+
+  ActiveSupport.run_load_hooks(:fat_free_crm_campaign, self)
 
 end

@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require File.dirname(__FILE__) + '/sample_emails/dropbox'
 
@@ -283,17 +288,17 @@ describe FatFreeCRM::MailProcessor::Dropbox do
     describe "'access'" do
 
       it "should be 'Private' if default setting is 'Private'" do
-        Setting.stub!(:default_access).and_return('Private')
+        Setting.stub(:default_access).and_return('Private')
         @crawler.send(:default_access).should == "Private"
       end
 
       it "should be 'Public' if default setting is 'Public'" do
-        Setting.stub!(:default_access).and_return('Public')
+        Setting.stub(:default_access).and_return('Public')
         @crawler.send(:default_access).should == "Public"
       end
 
       it "should be 'Private' if default setting is 'Shared'" do
-        Setting.stub!(:default_access).and_return('Shared')
+        Setting.stub(:default_access).and_return('Shared')
         @crawler.send(:default_access).should == "Private"
       end
 

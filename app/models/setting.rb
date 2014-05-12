@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 # == Schema Information
 #
 # Table name: settings
@@ -83,7 +71,6 @@ class Setting < ActiveRecord::Base
       end
     end
 
-
     # Set setting value
     #-------------------------------------------------------------------
     def []=(name, value)
@@ -93,7 +80,6 @@ class Setting < ActiveRecord::Base
       setting.save
       cache[name] = value
     end
-
 
     # Unrolls [ :one, :two ] settings array into [[ "One", :one ], [ "Two", :two ]]
     # picking symbol translations from locale. If setting is not a symbol but
@@ -110,26 +96,13 @@ class Setting < ActiveRecord::Base
       table_exists? rescue false
     end
 
-
     # Loads settings from YAML files
     def load_settings_from_yaml(file)
-      begin
-        settings = YAML.load_file(file)
-        # Merge settings into current settings hash (recursively)
-        @@yaml_settings.deep_merge!(settings)
-      rescue Exception => ex
-        puts "Settings couldn't be loaded from #{file}: #{ex.message}"
-      end
-      yaml_settings
+      settings = YAML.load_file(file)
+      @@yaml_settings.deep_merge!(settings)
     end
+
   end
-end
 
-
-# Load default settings, then override with custom settings, if present.
-setting_files = [FatFreeCRM.root.join("config", "settings.default.yml")]
-# Don't override default settings in test environment
-setting_files << Rails.root.join("config", "settings.yml") unless Rails.env == 'test'
-setting_files.each do |settings_file|
-  Setting.load_settings_from_yaml(settings_file) if File.exist?(settings_file)
+  ActiveSupport.run_load_hooks(:fat_free_crm_setting, self)
 end

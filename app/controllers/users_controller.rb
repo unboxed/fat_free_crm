@@ -1,60 +1,34 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class UsersController < ApplicationController
 
-  before_filter :require_no_user, :only => [ :new, :create ]
-  before_filter :require_user, :only => [ :show, :redraw ]
   before_filter :set_current_tab, :only => [ :show, :opportunities_overview ] # Don't hightlight any tabs.
-  before_filter :require_and_assign_user, :except => [ :new, :create, :show, :avatar, :upload_avatar ]
-  before_filter :assign_given_or_current_user, :only => [ :show, :avatar, :upload_avatar, :edit, :update ]
 
-  load_resource
+  check_authorization
+  load_and_authorize_resource # handles all security
 
   respond_to :html, :only => [ :show, :new ]
 
   # GET /users/1
-  # GET /users/1.json
-  # GET /users/1.xml                                                       HTML
+  # GET /users/1.js
   #----------------------------------------------------------------------------
   def show
+    @user = current_user if params[:id].nil?
     respond_with(@user)
   end
 
   # GET /users/new
-  # GET /users/new.json
-  # GET /users/new.xml                                                     HTML
+  # GET /users/new.js
   #----------------------------------------------------------------------------
   def new
-    if can_signup?
-      respond_with(@user)
-    else
-      redirect_to login_path
-    end
-  end
-
-  # GET /users/1/edit                                                      AJAX
-  #----------------------------------------------------------------------------
-  def edit
     respond_with(@user)
   end
 
   # POST /users
-  # POST /users.xml                                                        HTML
+  # POST /users.js
   #----------------------------------------------------------------------------
   def create
     if @user.save
@@ -70,31 +44,29 @@ class UsersController < ApplicationController
     end
   end
 
+  # GET /users/1/edit.js
+  #----------------------------------------------------------------------------
+  def edit
+    respond_with(@user)
+  end
+
   # PUT /users/1
-  # PUT /users/1.json
-  # PUT /users/1.xml                                                       AJAX
+  # PUT /users/1.js
   #----------------------------------------------------------------------------
   def update
     @user.update_attributes(params[:user])
     respond_with(@user)
   end
 
-  # DELETE /users/1
-  # DELETE /users/1.xml                HTML and AJAX (not directly exposed yet)
-  #----------------------------------------------------------------------------
-  def destroy
-    # not exposed
-  end
-
   # GET /users/1/avatar
-  # GET /users/1/avatar.xml                                                AJAX
+  # GET /users/1/avatar.js
   #----------------------------------------------------------------------------
   def avatar
     respond_with(@user)
   end
 
   # PUT /users/1/upload_avatar
-  # PUT /users/1/upload_avatar.xml                                         AJAX
+  # PUT /users/1/upload_avatar.js
   #----------------------------------------------------------------------------
   def upload_avatar
     if params[:gravatar]
@@ -103,8 +75,10 @@ class UsersController < ApplicationController
       render
     else
       if params[:avatar]
-        @user.avatar = Avatar.new(params[:avatar].merge(:entity => @user))
-        unless @user.save && @user.avatar.errors.blank?
+        avatar = Avatar.create(params[:avatar].merge(:entity => @user))
+        if avatar.valid?
+          @user.avatar = avatar
+        else
           @user.avatar.errors.clear
           @user.avatar.errors.add(:image, t(:msg_bad_image_file))
         end
@@ -118,19 +92,21 @@ class UsersController < ApplicationController
   end
 
   # GET /users/1/password
-  # GET /users/1/password.xml                                              AJAX
+  # GET /users/1/password.js
   #----------------------------------------------------------------------------
   def password
     respond_with(@user)
   end
 
   # PUT /users/1/change_password
-  # PUT /users/1/change_password.xml                                       AJAX
+  # PUT /users/1/change_password.js
   #----------------------------------------------------------------------------
   def change_password
     if @user.valid_password?(params[:current_password], true) || @user.password_hash.blank?
       unless params[:user][:password].blank?
-        @user.update_attributes(params[:user])
+        @user.password = params[:user][:password]
+        @user.password_confirmation = params[:user][:password_confirmation]
+        @user.save
         flash[:notice] = t(:msg_password_changed)
       else
         flash[:notice] = t(:msg_password_not_changed)
@@ -142,27 +118,18 @@ class UsersController < ApplicationController
     respond_with(@user)
   end
 
-  # POST /users/1/redraw                                                   AJAX
+  # GET /users/1/redraw
   #----------------------------------------------------------------------------
   def redraw
     current_user.preference[:locale] = params[:locale]
-    render(:update) { |page| page.redirect_to user_path(current_user) }
+    render :js => %Q{window.location.href = "#{user_path(current_user)}";}
   end
 
+  # GET /users/opportunities_overview
+  #----------------------------------------------------------------------------
   def opportunities_overview
     @users_with_opportunities = User.have_assigned_opportunities.order(:first_name)
     @unassigned_opportunities = Opportunity.unassigned.pipeline.order(:stage)
   end
 
-  private
-
-  #----------------------------------------------------------------------------
-  def require_and_assign_user
-    require_user
-    @user = current_user
-  end
-
-  def assign_given_or_current_user
-    @user = params[:id] ? User.find(params[:id]) : current_user
-  end
 end

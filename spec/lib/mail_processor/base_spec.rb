@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require File.dirname(__FILE__) + '/sample_emails/dropbox'
 
@@ -62,7 +67,7 @@ describe FatFreeCRM::MailProcessor::Base do
   describe "Discarding a message" do
     before(:each) do
       mock_connect
-      @uid = mock
+      @uid = double
       @crawler.send(:connect!)
     end
 
@@ -85,7 +90,7 @@ describe FatFreeCRM::MailProcessor::Base do
   describe "Archiving a message" do
     before(:each) do
       mock_connect
-      @uid = mock
+      @uid = double
       @crawler.send(:connect!)
     end
 
@@ -107,16 +112,16 @@ describe FatFreeCRM::MailProcessor::Base do
   #------------------------------------------------------------------------------
   describe "Validating email" do
     before(:each) do
-      @email = mock
+      @email = double
     end
 
     it "should be valid email if its contents type is text/plain" do
-      @email.stub!(:content_type).and_return("text/plain")
+      @email.stub(:content_type).and_return("text/plain")
       @crawler.send(:is_valid?, @email).should == true
     end
 
     it "should be invalid email if its contents type is not text/plain" do
-      @email.stub!(:content_type).and_return("text/html")
+      @email.stub(:content_type).and_return("text/html")
       @crawler.send(:is_valid?, @email).should == false
     end
   end
@@ -125,8 +130,8 @@ describe FatFreeCRM::MailProcessor::Base do
   describe "Finding email sender among users" do
     before(:each) do
       @from = [ "Aaron@Example.Com", "Ben@Example.com" ]
-      @email = mock
-      @email.stub!(:from).and_return(@from)
+      @email = double
+      @email.stub(:from).and_return(@from)
     end
 
     it "should find non-suspended user that matches From: field" do

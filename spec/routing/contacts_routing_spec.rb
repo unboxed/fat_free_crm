@@ -1,3 +1,8 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe ContactsController do
@@ -48,7 +53,7 @@ describe ContactsController do
     end
 
     it "recognizes and generates #auto_complete" do
-      { :post => "/contacts/auto_complete" }.should route_to( :controller => "contacts", :action => "auto_complete" )
+      { :get => "/contacts/auto_complete" }.should route_to( :controller => "contacts", :action => "auto_complete" )
     end
   end
 end

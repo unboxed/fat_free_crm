@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class ContactsController < EntitiesController
   before_filter :get_accounts, :only => [ :new, :create, :edit, :update ]
 
@@ -25,6 +13,7 @@ class ContactsController < EntitiesController
 
     respond_with @contacts do |format|
       format.xls { render :layout => 'header' }
+      format.csv { render :csv => @contacts }
     end
   end
 
@@ -79,7 +68,7 @@ class ContactsController < EntitiesController
         unless params[:account][:id].blank?
           @account = Account.find(params[:account][:id])
         else
-          if request.referer =~ /\/accounts\/(.+)$/
+          if request.referer =~ /\/accounts\/(\d+)\z/
             @account = Account.find($1) # related account
           else
             @account = Account.new(:user => current_user)
@@ -127,7 +116,7 @@ class ContactsController < EntitiesController
   #----------------------------------------------------------------------------
   # Handled by ApplicationController :auto_complete
 
-  # POST /contacts/redraw                                                  AJAX
+  # GET /contacts/redraw                                                   AJAX
   #----------------------------------------------------------------------------
   def redraw
     current_user.pref[:contacts_per_page] = params[:per_page] if params[:per_page]
@@ -146,7 +135,7 @@ class ContactsController < EntitiesController
 
     @contacts = get_contacts(:page => 1, :per_page => params[:per_page]) # Start on the first page.
     set_options # Refresh options
-    
+
     respond_with(@contacts) do |format|
       format.js { render :index }
     end
@@ -178,7 +167,7 @@ class ContactsController < EntitiesController
       else
         self.current_page = 1
       end
-      # At this point render destroy.js.rjs
+      # At this point render destroy.js
     else
       self.current_page = 1
       flash[:notice] = t(:msg_asset_deleted, @contact.full_name)

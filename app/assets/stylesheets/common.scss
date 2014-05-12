@@ -1,20 +1,8 @@
-// Fat Free CRM
-// Copyright (C) 2008-2011 by Michael Dvorkin
+// Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Fat Free CRM is freely distributable under the terms of MIT license.
+// See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 //------------------------------------------------------------------------------
-
 $color_title: #342d7e;
 $color_subtitle: darkslateblue;
 $sidebar_width: 210px;
@@ -197,7 +185,13 @@ $sidebar_width: 210px;
         display: block;
         padding-top: 2px;
         input {
-          margin-right: 5px; } } } } }
+          margin-right: 5px; } }
+      div.input.radio_buttons > span {
+        display: block;
+        padding-top: 2px;
+        label { vertical-align: middle; margin-left: 5px; }
+        input {
+          margin-left: 5px; } } } } }
 
 .remote {
   border: 5px lightblue solid;
@@ -445,7 +439,6 @@ $sidebar_width: 210px;
   padding: 8px 0px 7px 0px;
   li {
     border-bottom: 1px silver dotted;
-    clear: both;
     color: #3f3f3f;
     font-size: 12px;
     list-style: none;
@@ -686,25 +679,11 @@ span.handle img {
 .field_group .list {
   padding-bottom: 30px; }
 
-#lists {
-  .show_lists_save_form {
-    text-align: right; }
-  .show_lists_save_form, .save_list {
-    margin: 10px 0 0; }
-  .list_icon {
-    opacity: 0.5;
-    width: 12px; }
-  img.input_info {
-    vertical-align: middle; }
-  input#save_list {
-    margin-top: 6px; } }
-
 .fields .subtitle {
   cursor: move; }
 
 .fields .title {
   margin-bottom: 12px; }
-
 
 ul.tools {
   display: inline;
@@ -753,5 +732,34 @@ table.asset_attributes {
   }
   td.last, th.last {
     border-bottom: none;
+  }
+}
+
+.spinner {
+  margin: 7px 4px 0px 4px;
+  float: right;
+}
+
+.comment .spinner {
+  margin: 5px 4px 0px 4px;
+  float: left;
+}
+
+.comment .buttons {
+  padding-left: 40px;
+}
+
+// Jumpbox
+
+.ui-menu-item > a:not(.ui-state-focus) {
+  span.jumpbox-highlight {
+    background-color: lightyellow;
+    font-weight: bold;
+  }
+}
+
+.ui-state-focus {
+  span.jumpbox-highlight {
+    background-color: darkgray;
   }
 }

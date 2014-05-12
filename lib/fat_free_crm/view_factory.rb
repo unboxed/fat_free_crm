@@ -1,18 +1,7 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
 
 module FatFreeCRM
@@ -27,7 +16,7 @@ module FatFreeCRM
   # Icon is optional. If specified, it will be passed to asset_path.
   #
   class ViewFactory
-  
+
     include Comparable
 
     @@views = []
@@ -36,13 +25,13 @@ module FatFreeCRM
     # Class methods
     #----------------------------------------------------------------------------
     class << self
-    
+
       # Register with the view factory
       #----------------------------------------------------------------------------
       def register(view)
         @@views << view unless @@views.map(&:id).include?(view.id)
       end
-      
+
       # Return views that are available based on context
       #----------------------------------------------------------------------------
       def views_for(options = {})
@@ -53,7 +42,7 @@ module FatFreeCRM
           view.controllers.include?(controller) and view.actions.include?(action) and (name.present? ? view.name == name : true)
         end
       end
-      
+
       # Return template name of the current view
       # pass in options[:name] to specify view name
       #----------------------------------------------------------------------------
@@ -84,12 +73,14 @@ module FatFreeCRM
     end
 
     private
-    
+
     # This defines what it means for one view to be different to another
     #----------------------------------------------------------------------------
     def generate_id
        [name, controllers.sort, actions.sort].flatten.map(&:to_s).map(&:underscore).join('_')
     end
+
+    ActiveSupport.run_load_hooks(:fat_free_crm_view_factory, self)
 
   end
 end

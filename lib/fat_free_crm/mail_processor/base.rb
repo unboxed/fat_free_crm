@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 require 'net/imap'
 require 'mail'
 require 'email_reply_parser'
@@ -206,19 +194,33 @@ module FatFreeCRM
         parts = if email.multipart?
           email.parts.map {|p| p.multipart? ? p.parts : p}.flatten
         else
+          charset = email.charset
           [email]
         end
 
         if text_part = parts.detect {|p| p.content_type.include?('text/plain')}
           text_body = text_part.body.to_s
-
+          charset = text_part.charset if email.multipart?
         else
           html_part = parts.detect {|p| p.content_type.include?('text/html')} || email
           text_body = Premailer.new(html_part.body.to_s, :with_html_string => true).to_plain_text
+          charset = html_part.charset if email.multipart?
         end
 
-        # Standardize newline
-        text_body.strip.gsub "\r\n", "\n"
+        # Convert to UTF8 and standardize newline
+        clean_invalid_utf8_bytes(text_body.strip.gsub("\r\n", "\n"), charset)
+      end
+
+      # Forces the encoding of the given string to UTF8 and replaces invalid characters. This is
+      # necessary as emails sometimes have invalid characters like MS "Smart Quotes."
+      def clean_invalid_utf8_bytes(text, src_encoding)
+        text.encode(
+          'UTF-8',
+          src_encoding,
+          invalid: :replace,
+          undef: :replace,
+          replace: ''
+        )
       end
 
     end

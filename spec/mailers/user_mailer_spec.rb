@@ -1,6 +1,12 @@
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
+#
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
+#------------------------------------------------------------------------------
 require 'spec_helper'
 
 describe UserMailer do
+
   describe "password_reset_instructions" do
     let(:user) { FactoryGirl.create(:user, :email => "forgot_my_password@example.com") }
     let(:mail) { UserMailer.password_reset_instructions(user) }
@@ -36,7 +42,7 @@ describe UserMailer do
       let(:mail) { UserMailer.assigned_entity_notification(account, assigner) }
 
       it "sets fatfree as the sender" do
-        mail.from.should eql(["notifications@fatfreecrm.com"])
+        mail.from.should eql(["noreply@fatfreecrm.com"])
       end
 
       it "sets user 'assignee@example.com' as recipient" do
@@ -61,7 +67,7 @@ describe UserMailer do
       let(:mail) { UserMailer.assigned_entity_notification(contact, assigner) }
 
       it "sets fatfree as the sender" do
-        mail.from.should eql(["notifications@fatfreecrm.com"])
+        mail.from.should eql(["noreply@fatfreecrm.com"])
       end
 
       it "sets user 'assignee@example.com' as recipient" do
@@ -86,7 +92,7 @@ describe UserMailer do
       let(:mail) { UserMailer.assigned_entity_notification(lead, assigner) }
 
       it "sets fatfree as the sender" do
-        mail.from.should eql(["notifications@fatfreecrm.com"])
+        mail.from.should eql(["noreply@fatfreecrm.com"])
       end
 
       it "sets user 'assignee@example.com' as recipient" do
@@ -111,7 +117,7 @@ describe UserMailer do
       let(:mail) { UserMailer.assigned_entity_notification(opportunity, assigner) }
 
       it "sets fatfree as the sender" do
-        mail.from.should eql(["notifications@fatfreecrm.com"])
+        mail.from.should eql(["noreply@fatfreecrm.com"])
       end
 
       it "sets user 'assignee@example.com' as recipient" do

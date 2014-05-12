@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class AccountsController < EntitiesController
   before_filter :get_data_for_sidebar, :only => :index
 
@@ -25,6 +13,7 @@ class AccountsController < EntitiesController
 
     respond_with @accounts do |format|
       format.xls { render :layout => 'header' }
+      format.csv { render :csv => @accounts }
     end
   end
 
@@ -109,14 +98,14 @@ class AccountsController < EntitiesController
   #----------------------------------------------------------------------------
   # Handled by ApplicationController :auto_complete
 
-  # POST /accounts/redraw                                                  AJAX
+  # GET /accounts/redraw                                                   AJAX
   #----------------------------------------------------------------------------
   def redraw
     current_user.pref[:accounts_per_page] = params[:per_page] if params[:per_page]
     current_user.pref[:accounts_sort_by]  = Account::sort_by_map[params[:sort_by]] if params[:sort_by]
     @accounts = get_accounts(:page => 1, :per_page => params[:per_page])
     set_options # Refresh options
-    
+
     respond_with(@accounts) do |format|
       format.js { render :index }
     end
@@ -127,7 +116,7 @@ class AccountsController < EntitiesController
   def filter
     session[:accounts_filter] = params[:category]
     @accounts = get_accounts(:page => 1, :per_page => params[:per_page])
-    
+
     respond_with(@accounts) do |format|
       format.js { render :index }
     end
@@ -147,7 +136,7 @@ private
         @accounts = get_accounts(:page => current_page - 1) if current_page > 1
         render :index and return
       end
-      # At this point render default destroy.js.rjs template.
+      # At this point render default destroy.js
     else # :html request
       self.current_page = 1 # Reset current page to 1 to make sure it stays valid.
       flash[:notice] = t(:msg_asset_deleted, @account.name)

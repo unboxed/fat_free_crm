@@ -6,15 +6,6 @@ gem 'mysql2', '0.3.10'
 # gem 'sqlite3'
 #gem 'pg', '~> 0.13.2'
 
-# Allows easy switching between locally developed gems, and gems installed from rubygems.org
-# See README for more info at: https://github.com/ndbroadbent/bundler_local_development
-gem 'bundler_local_development', :group => :development, :require => false
-begin
-  require 'bundler_local_development'
-  Bundler.development_gems = [/^ffcrm_/, /ransack/]
-rescue LoadError
-end
-
 # Removes a gem dependency
 def remove(name)
   @dependencies.reject! {|d| d.name == name }
@@ -29,52 +20,56 @@ end
 # Bundler no longer treats runtime dependencies as base dependencies.
 # The following code restores this behaviour.
 # (See https://github.com/carlhuda/bundler/issues/1041)
-spec = Bundler.load_gemspec(Dir["./{,*}.gemspec"].first)
+spec = Bundler.load_gemspec( File.expand_path("../fat_free_crm.gemspec", __FILE__) )
 spec.runtime_dependencies.each do |dep|
   gem dep.name, *(dep.requirement.as_list)
 end
 
 # Remove premailer auto-require
 gem 'premailer', :require => false
-gem 'ffcrm_ldap', '~> 0.1.4'
+gem 'ffcrm_ldap', :git => 'git@github.com:unboxed/ffcrm_ldap.git'
 
 # Remove fat_free_crm dependency, to stop it from being auto-required too early.
 remove 'fat_free_crm'
 
 group :development do
-  gem 'thin'
-  gem 'quiet_assets'
-  # Uncomment the following two gems to deploy via Capistrano
-  gem 'capistrano'
-  gem 'capistrano_colors'
+  # don't load these gems in travis
+  unless ENV["CI"]
+    gem 'thin'
+    gem 'quiet_assets'
+    gem 'capistrano', '~> 2'
+    gem 'capistrano_colors'
+    gem 'guard'
+    gem 'guard-rspec'
+    gem 'guard-rails'
+    gem 'rb-inotify', :require => false
+    gem 'rb-fsevent', :require => false
+    gem 'rb-fchange', :require => false
+  end
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 2.9.0'
+  gem 'rspec-rails'
   gem 'headless'
-  unless ENV["CI"]
-    gem 'ruby-debug', :platform => :mri_18
-    gem 'debugger', :platform => :mri_19
-  end
-  gem 'pry-rails'
+  gem 'debugger' unless ENV["CI"]
+  gem 'pry-rails' unless ENV["CI"]
 end
 
 group :test do
-  gem 'capybara', '~> 1.1' # v2 and up is not r1.8 compatible.
+  gem 'capybara'
+  gem 'selenium-webdriver'
   gem 'database_cleaner'
-  gem "acts_as_fu", "~> 0.0.8"
-
-  if RUBY_VERSION.to_f >= 1.9
-    gem 'factory_girl_rails', '~> 3.0.0'
-  else
-    gem 'factory_girl_rails', '~> 1.7.0'
-  end
+  gem "acts_as_fu"
+  gem 'factory_girl_rails'
+  gem 'zeus' unless ENV["CI"]
+  gem 'coveralls', :require => false
+  gem 'timecop'
 end
 
 group :heroku do
   gem 'unicorn', :platform => :ruby
+  gem 'rails_12factor'
 end
-
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -83,9 +78,7 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier',     '>= 1.0.3'
   gem 'execjs'
-  unless ENV["CI"]
-    gem 'therubyracer', :platform => :ruby
-  end
+  gem 'therubyracer', :platform => :ruby unless ENV["CI"]
 end
 
 #gem 'turbo-sprockets-rails3'

@@ -1,5 +1,5 @@
 .remote
-  = form_for(@lead, :url => promote_lead_path(@lead), :html => one_submit_only(:lead), :remote => true) do |f|
+  = form_for(@lead, :url => promote_lead_path(@lead), :html => one_submit_only, :remote => true) do |f|
     = link_to_close convert_lead_path(@lead)
     = fields_for(@account) do |a|
       = a.hidden_field :user_id
@@ -12,17 +12,7 @@
           #{t(:convert_lead_text, @lead.full_name)}
         %table
           %tr
-            %td
-              .label.req
-                #{t :account}
-                %span#account_create_title
-                  (#{t :create_new} #{t :or} <a href='#' onclick='crm.select_account(1); return false;'>#{t :select_existing}</a>):
-                %span#account_select_title
-                  (<a href='#' onclick='crm.create_account(1); return false;'>#{t :create_new}</a> #{t :or} #{t :select_existing}):
-                %span#account_disabled_title :
-
-              = collection_select :account, :id, @accounts, :id, :name, { :selected => (@account.id || 0), :include_blank => true }, { :style => "width:330px; display:none;" }
-              = a.text_field :name, :style => "width:324px; display:none;"
+            %td= account_select_or_create(a)
             %td= spacer
             %td
               .label.req #{t :assigned_to}:

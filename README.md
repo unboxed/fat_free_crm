@@ -1,4 +1,4 @@
-# Fat Free CRM [![TravisCI][travis-img-url]][travis-ci-url]
+# Fat Free CRM [![TravisCI][travis-img-url]][travis-ci-url]  [![Code Climate](https://codeclimate.com/github/fatfreecrm/fat_free_crm.png)](https://codeclimate.com/github/fatfreecrm/fat_free_crm)
 
 [travis-img-url]: https://secure.travis-ci.org/fatfreecrm/fat_free_crm.png?branch=master
 [travis-ci-url]: http://travis-ci.org/fatfreecrm/fat_free_crm
@@ -14,29 +14,29 @@ contact lists, and opportunity tracking.
 <table>
   <tr>
     <td align="center">
-      <a href="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/backup/images/contact_create.png" target="_blank" title="Create Contacts">
-        <img src="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/backup/images/contact_create_t.png" alt="Create Contacts">
+      <a href="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/images/contact_create.png" target="_blank" title="Create Contacts">
+        <img src="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/images/contact_create_t.png" alt="Create Contacts">
       </a>
       <br />
       <em>Contacts</em>
     </td>
     <td align="center">
-      <a href="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/backup/images/contact_opportunity.png" target="_blank" title="Manage Opportunities">
-        <img src="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/backup/images/contact_opportunity_t.png" alt="Manage Opportunities">
+      <a href="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/images/contact_opportunity.png" target="_blank" title="Manage Opportunities">
+        <img src="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/images/contact_opportunity_t.png" alt="Manage Opportunities">
       </a>
       <br />
       <em>Opportunities</em>
     </td>
     <td align="center">
-      <a href="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/backup/images/account_edit.png" target="_blank" title="Edit Accounts">
-        <img src="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/backup/images/account_edit_t.png" alt="Edit Accounts">
+      <a href="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/images/account_edit.png" target="_blank" title="Edit Accounts">
+        <img src="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/images/account_edit_t.png" alt="Edit Accounts">
       </a>
       <br />
       <em>Accounts</em>
     </td>
     <td align="center">
-      <a href="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/backup/images/task_create.png" target="_blank" title="Create Tasks">
-        <img src="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/backup/images/task_create_t.png" alt="Create Tasks">
+      <a href="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/images/task_create.png" target="_blank" title="Create Tasks">
+        <img src="https://github.com/fatfreecrm/fatfreecrm.github.com/raw/master/images/task_create_t.png" alt="Create Tasks">
       </a>
       <br />
       <em>Tasks</em>
@@ -49,21 +49,22 @@ New features, enhancements, and updates appear on regular basis.
 
 Pull requests and bug reports are always welcome!
 
+Visit our website at http://www.fatfreecrm.com/
+
+## Important security note
+
+Please note that several severe vulnerabilities have been fixed recently. You should upgrade to versions 0.12.3 or 0.13.2 or higher. See the [**security vulnerabilities**](https://github.com/fatfreecrm/fat_free_crm/wiki/Security) page for more details.
 
 ## System Requirements
 
-* Ruby v1.9.3
-  * Note that Ruby v1.8.7 was supported until v0.11.4 (see https://github.com/fatfreecrm/fat_free_crm/tree/ruby1.8)
+* Ruby 2.1 (or 2.0) recommended (it's much faster!)
+  * Ruby 1.9.3 is also compatible
+  * Ruby 1.9.2 should be compatible but is not longer supported
+  * Ruby v1.8.7 was supported until v0.11.4 (see https://github.com/fatfreecrm/fat_free_crm/tree/ruby1.8)
 * MySQL v4.1.1 or later (v5+ is recommended), SQLite v3.4 or later, or Postgres 8.4.8 or later.
 * ImageMagick (optional, only needed if you would like to use avatars)
 
 (Ruby on Rails and other gem dependencies will be installed automatically by Bundler.)
-
-
-### Downloads
-
-* Git source code repository: `git clone git://github.com/fatfreecrm/fat_free_crm.git`
-* **.zip** or **.tgz** archives: http://github.com/fatfreecrm/fat_free_crm/downloads
 
 
 ## Installation
@@ -82,30 +83,15 @@ Setting up a Heroku instance for Fat Free CRM
 
 Installing Fat Free CRM on Microsoft Windows
 
-### [Ubuntu Server Setup Script](http://guides.fatfreecrm.com/Ubuntu-Server-Setup-Script.html)
-
-Run this bash script to quickly setup a Ubuntu server
-
 ### [Running Fat Free CRM as a Rails Engine](http://guides.fatfreecrm.com/Running-as-a-Rails-Engine.html)
 
 Run the Fat Free CRM gem within a separate Rails application.
-This is the best way to deploy Fat Free CRM if you need to add plugins or make any customizations.
+This is the best way to deploy Fat Free CRM if you need to add plugins or make any customizations. Note that it is not yet simple to 'bolt' Fat Free CRM into your existing rails project, but we're heading in that direction.
 
 
 ## Upgrading from previous versions of Fat Free CRM
 
-If you are upgrading from version 0.11.3 (Dec 21st 2012) or below, please see an [important fix for country data](https://github.com/fatfreecrm/fat_free_crm/wiki/The-Countries-Problem-and-How-to-Fix-It)
-
-If you are upgrading from version 0.10.1 or below to the latest Rails 3.x version, your database schema
-needs to be updated.
-
-Please run the following commands in this order:
-
-```bash
-bundle install --without heroku   # Installs gem dependencies
-rake ffcrm:upgrade:schema         # Updates your schema to use the new timestamped migrations
-rake db:migrate                   # Runs any new database migrations.
-```
+Please read the [Release Notes](http://guides.fatfreecrm.com/Release-Notes.html) document for more detailed information on upgrading from previous versions.
 
 
 ## Resources
@@ -118,6 +104,7 @@ rake db:migrate                   # Runs any new database migrations.
 |       **Github Project Page**: | http://github.com/fatfreecrm/fat_free_crm |
 | **Feature Requests and Bugs**: | http://support.fatfreecrm.com/ |
 |                  **RDoc API**: | http://api.fatfreecrm.com |
+|                  **Ruby gem**: | https://rubygems.org/gems/fat_free_crm |
 |    **Twitter Commit Updates**: | http://twitter.com/fatfreecrm |
 |       **User's Google Group**: | http://groups.google.com/group/fat-free-crm-users |
 |  **Developer's Google Group**: | http://groups.google.com/group/fat-free-crm-dev |
@@ -126,36 +113,41 @@ rake db:migrate                   # Runs any new database migrations.
 
 ## For Developers
 
-Fat Free CRM can be customized by implementing callback hooks and extended by
-creating Rails Engines plugins. Check out these sample repositories demonstrating
-the concepts:
+Fat Free CRM is released under the MIT license and is freely available for you to use for your own purposes. We do encourage contributions to make Fat Free CRM even better. Send us a pull-request and we'll do our best to accomodate your needs.
 
-* http://github.com/michaeldv/crm_sample_plugin/tree/master
-* http://github.com/michaeldv/crm_sample_tabs/tree/master
-* http://github.com/michaeldv/crm_web_to_lead/tree/master
-* http://github.com/michaeldv/crm_tags/tree/master
+Specific features that are not 'Fat Free' in nature, can be added by creating Rails Engines. See the [wiki](http://github.com/fatfreecrm/fat_free_crm/wiki) for information on how to do this.
 
-## Contributors
+Tests can easily be run by typing 'rake' but please note that they do take a while to run! Alternatively, you can see the test build status over at our [travis page](http://travis-ci.org/fatfreecrm/fat_free_crm)
+
+
+## Main contributors
 
 * [Michael Dvorkin (@michaeldv)](https://github.com/michaeldv) - Founding creator
+* [Steve Kenworthy (@steveyken)](https://github.com/steveyken) - Maintainer
 * [Nathan Broadbent (@ndbroadbent)](https://github.com/ndbroadbent)
-* [Ben Tillman (@warp)](https://github.com/warp)
-* [Steve Kenworthy (@steveyken)](https://github.com/steveyken)
 
 See the [contributors graph](https://github.com/fatfreecrm/fat_free_crm/graphs/contributors) and the [contributors file](https://github.com/fatfreecrm/fat_free_crm/blob/master/CONTRIBUTORS) for further details.
 
 ## License
 
-Copyright (c) 2008-2013 by Michael Dvorkin. All rights reserved.
+Fat Free CRM
+Copyright (c) 2008-2014 Michael Dvorkin and contributors.
 
-This program is free software: you can redistribute it and/or modify it
-under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or (at your
-option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
-See LICENSE file for more details.
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

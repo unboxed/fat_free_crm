@@ -1,27 +1,22 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class ListsController < ApplicationController
 
   # POST /lists
   #----------------------------------------------------------------------------
   def create
+
+    if params[:is_global].to_i.zero?
+      params[:list][:user_id] = current_user.id
+    else
+      params[:list][:user_id] = nil
+    end
+
     # Find any existing list with the same name (case insensitive)
-    if @list = List.find(:first, :conditions => ["lower(name) = ?", params[:list][:name].downcase])
+    if @list = List.where("lower(name) = ?", params[:list][:name].downcase).where({:user_id => params[:list][:user_id]}).first
       @list.update_attributes(params[:list])
     else
       @list = List.create(params[:list])

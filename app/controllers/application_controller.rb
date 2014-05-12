@@ -1,21 +1,11 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 class ApplicationController < ActionController::Base
+
+  protect_from_forgery
 
   before_filter :set_context
   before_filter :clear_setting_cache
@@ -34,6 +24,8 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, :with => :respond_to_not_found
   rescue_from CanCan::AccessDenied,         :with => :respond_to_access_denied
 
+  include ERB::Util # to give us h and j methods
+
   # Common auto_complete handler for all core controllers.
   #----------------------------------------------------------------------------
   def auto_complete
@@ -50,7 +42,7 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.any(:js, :html)   { render :partial => 'auto_complete' }
       format.json { render :json => @auto_complete.inject({}){|h,a|
-        h[a.id] = a.respond_to?(:full_name) ? a.full_name : a.name; h
+        h[a.id] = a.respond_to?(:full_name) ? h(a.full_name) : h(a.name); h
       }}
     end
   end
@@ -60,7 +52,7 @@ private
   #
   # Takes { :related => 'campaigns/7' } or { :related => '5' }
   #   and returns array of object ids that should be excluded from search
-  #   assumes controller_name is an method on 'related' class that returns a collection
+  #   assumes controller_name is a method on 'related' class that returns a collection
   #----------------------------------------------------------------------------
   def auto_complete_ids_to_exclude(related)
     return [] if related.blank?
@@ -128,7 +120,7 @@ private
       flash[:notice] = t(:msg_login_needed) if request.fullpath != "/"
       respond_to do |format|
         format.html { redirect_to login_url }
-        format.js   { render(:index) { |page| page.redirect_to login_url } }
+        format.js   { render :text => "window.location = '#{login_url}';" }
       end
     end
   end
@@ -155,7 +147,7 @@ private
 
   #----------------------------------------------------------------------------
   def can_signup?
-    [ :allowed, :needs_approval ].include? Setting.user_signup
+    User.can_signup?
   end
 
   #----------------------------------------------------------------------------
@@ -209,10 +201,10 @@ private
     flash[:warning] = t(:msg_asset_not_available, asset)
 
     respond_to do |format|
-      format.html { redirect_to :action => :index }
-      format.js   { render(:update) { |page| page.reload } }
-      format.json { render :text => flash[:warning], :status => :not_found }
-      format.xml  { render :text => flash[:warning], :status => :not_found }
+      format.html { redirect_to(redirection_url) }
+      format.js   { render :text => 'window.location.reload();' }
+      format.json { render :text => flash[:warning],  :status => :not_found }
+      format.xml  { render :xml => [flash[:warning]], :status => :not_found }
     end
   end
 
@@ -223,32 +215,32 @@ private
 
     url = send("#{related.pluralize}_path")
     respond_to do |format|
-      format.html { redirect_to url }
-      format.js   { render(:update) { |page| page.redirect_to url } }
-      format.json { render :text => flash[:warning], :status => :not_found }
-      format.xml  { render :text => flash[:warning], :status => :not_found }
+      format.html { redirect_to(url) }
+      format.js   { render :text => %Q{window.location.href = "#{url}";} }
+      format.json { render :text => flash[:warning],  :status => :not_found }
+      format.xml  { render :xml => [flash[:warning]], :status => :not_found }
     end
   end
 
   #----------------------------------------------------------------------------
   def respond_to_access_denied
-    if self.action_name == "show"
-      flash[:warning] = t(:msg_asset_not_authorized, asset)
-
-    else
-      flick = case self.action_name
-        when "destroy" then "delete"
-        when "promote" then "convert"
-        else self.action_name
-      end
-      flash[:warning] = t(:msg_cant_do, :action => flick, :asset => asset)
-    end
-
+    flash[:warning] = t(:msg_not_authorized, default: 'You are not authorized to take this action.')
     respond_to do |format|
-      format.html { redirect_to :action => :index }
-      format.js   { render(:update) { |page| page.reload } }
-      format.json { render :text => flash[:warning], :status => :unauthorized }
-      format.xml  { render :text => flash[:warning], :status => :unauthorized }
+      format.html { redirect_to(redirection_url) }
+      format.js   { render :text => 'window.location.reload();' }
+      format.json { render :text => flash[:warning],  :status => :unauthorized }
+      format.xml  { render :xml => [flash[:warning]], :status => :unauthorized }
     end
   end
+
+  #----------------------------------------------------------------------------
+  def redirection_url
+    # Try to redirect somewhere sensible. Note: not all controllers have an index action
+    url = if current_user.present?
+      (respond_to?(:index) and self.action_name != 'index') ? { action: 'index' } : root_url
+    else
+      login_url
+    end
+  end
+
 end

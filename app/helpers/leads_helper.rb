@@ -1,20 +1,8 @@
-# Fat Free CRM
-# Copyright (C) 2008-2011 by Michael Dvorkin
+# Copyright (c) 2008-2013 Michael Dvorkin and contributors.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Fat Free CRM is freely distributable under the terms of MIT license.
+# See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-
 module LeadsHelper
   RATING_STARS = 5
 
@@ -41,13 +29,12 @@ module LeadsHelper
 
   #----------------------------------------------------------------------------
   def confirm_reject(lead)
-    question = %(<span class="warn">#{t(:reject_lead_confirm)}</span>).html_safe
+    question = %(<span class="warn">#{t(:reject_lead_confirm)}</span>)
     yes = link_to(t(:yes_button), reject_lead_path(lead), :method => :put)
-    no = link_to_function(t(:no_button), "$('menu').update($('confirm').innerHTML)")
-    update_page do |page|
-      page << "$('confirm').update($('menu').innerHTML)"
-      page[:menu].replace_html "#{question} #{yes} : #{no}"
-    end
+    no = link_to_function(t(:no_button), "$('#menu').html($('#confirm').html());")
+    text = "$('#confirm').html( $('#menu').html() );\n"
+    text << "$('#menu').html('#{question} #{yes} : #{no}');"
+    text.html_safe
   end
 
   # Sidebar checkbox control for filtering leads by status.
@@ -63,16 +50,6 @@ module LeadsHelper
       when "Private" then t(:lead_permissions_intro_private, t(:opportunity_small))
       when "Public" then t(:lead_permissions_intro_public, t(:opportunity_small))
       when "Shared" then t(:lead_permissions_intro_shared, t(:opportunity_small))
-    end
-  end
-
-  # Returns default permissions intro for leads.
-  #----------------------------------------------------------------------------
-  def get_lead_default_permissions_intro(access)
-    case access
-      when "Private" then t(:lead_permissions_intro_private, t(:opportunity_small))
-      when "Public"  then t(:lead_permissions_intro_public,  t(:opportunity_small))
-      when "Shared"  then t(:lead_permissions_intro_shared,  t(:opportunity_small))
     end
   end
 
@@ -106,4 +83,3 @@ module LeadsHelper
     summary.join(', ')
   end
 end
-
