@@ -1,6 +1,7 @@
 ---
 en-GB:
   language: English (UK)
+  id: Id
   all: All
   at: at
   here: here
@@ -141,6 +142,29 @@ en-GB:
             email:
               missing_email: ^Please specify email address.
               email_in_use: ^There is another user with the same email.
+        custom_field:
+          required: ^%{field} is required.
+          maxlength: ^%{field} is too long.
+          endbeforestart: ^%{field} cannot end before it begins.
+    attribute_options:
+      opportunity:
+        stage:
+          prospecting: Prospecting
+          analysis: Analysis
+          presentation: Presentation
+          proposal: Proposal
+          negotiation: Negotiation
+          final_review: Final Review
+          won: Closed/Won
+          lost: Closed/Lost
+      account:
+        rating:
+          '0': ! '-'
+          '1': ★
+          '2': ★★
+          '3': ★★★
+          '4': ★★★★
+          '5': ★★★★★
   msg_account_suspended: User account has been suspended.
   password_reset_instruction: password reset instructions
   msg_account_created: Your account has been created and is awaiting approval by the
@@ -148,7 +172,7 @@ en-GB:
   msg_account_not_approved: Your account has not been approved yet.
   msg_asset_deleted: ! '%{value} has been deleted.'
   msg_asset_not_available: This %{value} is no longer available.
-  msg_asset_not_authorized: You are not authorized to view this %{value}.
+  msg_not_authorized: You are not authorized to take this action.
   msg_assets_not_available: The %{value} are not available.
   msg_asset_rejected: ! '%{value} has been rejected.'
   msg_bad_image_file: ^Could't upload or resize the image file you specified.
@@ -200,9 +224,17 @@ en-GB:
   option_target_revenue: target revenue
   option_updated_at: date updated
   show_per_page: Show %{number} %{models} per page using %{fmt} format.
-  sort_by: Sort %{models} by %{field}.
+  sort_by: Sort by %{field}
   sort_by_displaying: Sort %{models} by %{field} displaying first name %{position}
     last name.
+  entities_per_page: ! '%{entity} per page:'
+  contacts_index_long: Long format
+  contacts_index_brief: Brief format
+  contacts_index_full: Full format
+  opportunities_index_normal: Normal format
+  accounts_index_normal: Normal format
+  leads_index_normal: Normal format
+  campaigns_index_normal: Normal format
   aim: AOL IM
   already_signed_up: Already signed up?
   alt_email: Alternative email
@@ -241,16 +273,17 @@ en-GB:
   born_on: Born on
   reports_to: Reports to
   access: Access
-  contacts_account: Contact's account
   forgot_password: Forgot Password
   login: Login
   no_account: Do not have an account?
   remember_me: Remember Me
   sign_up_now: Sign Up Now!
   account: Account
+  account_id: Account
   select_an_account: Select an Account
   account_small: account
   account_summary: Account Summary
+  account_categories: Account Categories
   accounts: Accounts
   accounts_options: Accounts Options
   accounts_small: accounts
@@ -275,6 +308,8 @@ en-GB:
   shipping_address: Shipping address
   total_accounts: Total Accounts
   website: Website
+  account_with_title_department: ! '%{title}, %{department} at %{account}'
+  account_with_title: ! '%{title} at %{account}'
   actual: Actual
   actual_performance: Actual Performance
   budget: Budget
@@ -284,12 +319,15 @@ en-GB:
   campaign_small: campaign
   campaign_summary: Campaign Summary
   campaign_targets: Campaign Targets
+  campaign_statuses: Campaign Statuses
   campaigns: Campaigns
   campaigns_options: Campaigns Options
   campaigns_small: campaigns
   conversion: Conversion
   conversion_label: Conversion (%)
   conversion_number: ! '%{value} conversion'
+  target_conversion: Targe conversion
+  select_a_campaign: Select a campaign
   create_campaign: Create Campaign
   end_date: End date
   finished_on: completed on %{value}
@@ -314,6 +352,7 @@ en-GB:
   was_supposed_to_finish: was supposed to finish on %{value}
   was_supposed_to_start: was supposed to start %{time_ago} ago on %{start_date}
   was_supposed_to_start_in: was supposed to start in %{starts_in} on %{start_date}
+  select_a_campaign: Select a campaign
   alt_email_small: Other
   blog: Website/Blog
   contact: Contact
@@ -321,6 +360,7 @@ en-GB:
   contacts: Contacts
   contacts_options: Contacts Options
   contacts_small: contacts
+  contact_summary: Contact Summary
   create_contact: Create Contact
   department: Department
   department_small: ! '%{value} department'
@@ -344,6 +384,14 @@ en-GB:
   web_presence: Web Presence
   web_presence_small: web presence
   works_at: ! '%{job_title} at %{company}'
+  general_info: General Information
+  show_general_info_small: Show general information for this contact.
+  show_extra_info_small: Show extra information for this contact.
+  tag_details: ! '%{tag} Details'
+  show_tag_info_small: Show %{tag} information for this contact.
+  shared_with_everyone: Shared with everyone
+  title: Title
+  subscriptions: Subscriptions
   convert: Convert
   convert_lead: Convert Lead
   convert_lead_permissions_intro: Contact permissions will be copied from the lead
@@ -366,6 +414,7 @@ en-GB:
   lead_small: lead
   lead_status_small: lead status
   lead_summary: Lead Summary
+  lead_statuses: Lead Statuses
   leads: Leads
   leads_options: Leads Options
   leads_small: leads
@@ -377,8 +426,11 @@ en-GB:
   source: Source
   status: Status
   total_leads: Total Leads
+  show_status_info_small: Show status information for this lead.
+  show_contact_info_small: Show contact information for this lead.
   amount: Amount
   close_date: Close date
+  closes_on: Closes on
   closed_ago_on: closed %{time_ago} ago on %{date}
   closes_today: expected to close today!
   closing_date: closing date is %{value}
@@ -397,6 +449,7 @@ en-GB:
   opportunities_small: opportunities
   opportunity: Opportunity
   opportunity_small: opportunity
+  opportunity_stages: Opportunity Stages
   opportunity_summary: Opportunity At a Glance
   opportunity_summary_text: ! '%{amount} with %{discount} discount and %{probability}
     probability'
@@ -472,11 +525,13 @@ en-GB:
   subject_opportunity: opportunity
   subject_task: task
   subject_user: user
+  tag_list: Tags
   create_past_participle: Record Creations
   view_past_participle: Views
   update_past_participle: Updates
   destroy_past_participle: Deletions
   all_events_past_participle: Activities
+  action_create_comment: ! '- &quot;%{comment}&quot;'
   my_tasks: My Tasks
   no_task_records: You have no tasks.
   my_opportunities: My Opportunities
@@ -553,26 +608,10 @@ en-GB:
   welcome: Welcome
   accounts_advanced_search: Accounts Advanced search
   advanced_search: Advanced search
-  advanced_search_submit: Search
-  advanced_search_add_group: Add a group of filters
-  advanced_search_group_first: Show results where %{combinator} of the following match
-  advanced_search_group_rest: ! '...and where %{combinator} of the following match'
-  advanced_search_add_condition: Add a filter
-  advanced_search_remove_condition: Remove filter
-  ransack:
-    predicates:
-      eq: is
-      not_eq: is not
-      lt: is less than
-      gt: is greater than
-      matches: matches
-      does_not_match: doesn't match
-      cont: contains
-      not_cont: doesn't contain
-      blank: is blank
-      present: is present
-      'null': is null
-      not_null: is not null
+  basic_search: Basic search
+  search_results_count:
+    one: Search found %{count} result.
+    other: Search found %{count} results.
   comment: Comment
   edit_comment: Editing comment
   show: Show
@@ -602,6 +641,7 @@ en-GB:
   last_seen: last seen %{value} ago
   last_seen2: last seen %{value}
   personal_information: Personal Information
+  group_memberships: Group Memberships
   reactivate: Reactivate
   save_user: Save User
   suspend: Suspend
@@ -627,10 +667,16 @@ en-GB:
     unset_html: ! '%{attr} unset'
     change_html: ! '%{attr} changed from %{from} to %{to}'
     anonymous: anonymous
+  account_contact_id: Account id
+  account_contact_name: Account name
+  user_id: User id
+  created_at: Created at
+  updated_at: Updated at
   to_xls: Export to Excel
   to_csv: Export to comma-delimited file format (including deleted records)
   to_rss: RSS feed
   to_atom: Atom feed
+  to_perm: Permalink
   dropbox_notification_subject: dropbox - Added email - %{subject}
   dropbox_notification_intro: Succesfully added the email you sent to dropbox
   dropbox_notification_to: Added to
@@ -640,7 +686,8 @@ en-GB:
     intro: ! '%{user_full_name} commented on %{entity_type}: %{entity_name}'
     reply_instructions: Reply to this email directly to add a new comment, or view
       the %{entity} online
-  lists: Lists
+  global_lists: Global lists
+  personal_lists: My lists
   list: List
   no_saved_lists: No saved lists
   make_current_view_list: Make current view a list
@@ -694,8 +741,8 @@ en-GB:
   save_field_group: Save field group
   field_group_empty: There are no fields in this group.
   select_or_create_tags: Select some tags, or create a new tag by pressing 'enter'.
-  restrict_by_tag: Restrict by Tag
-  restrict_by_tag_info: Only show fields for %{assets} that are tagged with
+  restrict_by_tag: ! 'Restrict by Tag:'
+  restrict_by_tag_info: (Only show fields for %{assets} that are tagged with the following)
   field_group_tag_restriction: This field group applies to %{assets} tagged with "%{tag}"
   field_group_unrestricted: This field group applies to all %{assets}
   field_group_confirm_delete: If a field group is deleted, any fields will be moved
@@ -705,6 +752,12 @@ en-GB:
     Create a new field group, or add fields to one of the groups below.
     You can drag and drop fields to change their display order or move them between
     field groups.'
+  # Views -> Admin -> Tags
+  #----------------------------------------------------------------------------
+  admin_fields_info2: ! 'It is strongly recommended you restart your server after
+    adding or removing any custom field.
+
+'
   tags: Tags
   tag_small: tag
   tagged: Tagged
@@ -721,8 +774,8 @@ en-GB:
         version: Version
         description: Description
   simple_form:
-    'yes': 'Yes'
-    'no': 'No'
+    true: 'Yes'
+    false: 'No'
     required:
       text: required
       mark: ! '*'
@@ -763,3 +816,9 @@ en-GB:
       title: Number (Integer)
     float:
       title: Number (Floating Point)
+  pair:
+    start: Start
+    end: End
+    from_to: From %{from} to %{to}
+    from_only: From %{from}
+    to_only: Until %{to}
