@@ -3,6 +3,11 @@ source 'https://rubygems.org'
 # Uncomment the database that you have configured in config/database.yml
 # ----------------------------------------------------------------------
 gem 'mysql2', '0.3.10'
+
+# net-ssh fixed for capistrano because net-ssh 2.8 blocks password prompts
+# unfix when 2.8 is fixed
+gem 'net-ssh', '2.7'
+
 # gem 'sqlite3'
 #gem 'pg', '~> 0.13.2'
 
@@ -49,9 +54,10 @@ group :development do
 end
 
 group :development, :test do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 2'
   gem 'headless'
-  gem 'debugger' unless ENV["CI"]
+  gem 'debugger', :platforms => 'mri_19' unless ENV["CI"]
+  gem 'byebug', :platforms => ['mri_20', 'mri_21'] unless ENV["CI"]
   gem 'pry-rails' unless ENV["CI"]
 end
 
@@ -81,4 +87,4 @@ group :assets do
   gem 'therubyracer', :platform => :ruby unless ENV["CI"]
 end
 
-#gem 'turbo-sprockets-rails3'
+gem 'turbo-sprockets-rails3'

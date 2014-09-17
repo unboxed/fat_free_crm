@@ -433,6 +433,7 @@ en-GB:
   task_assigned: The task has been assigned to %{value}
   task_assigned_to: and assigned to %{value}
   task_completed: completed
+  task_uncomplete: Uncomplete
   task_completed_ago: completed %{value} ago
   task_completed_by: completed %{time_ago} ago (%{date}) by %{user}
   task_created: The task has been created
@@ -701,13 +702,9 @@ en-GB:
     to the default field group.
   msg_cant_delete_field_group: Field Group could not be deleted.
   admin_fields_info: ! 'Custom fields are displayed in groups.
-
-    Create a new field group, or add fields to one of the groups below.<br />
-
+    Create a new field group, or add fields to one of the groups below.
     You can drag and drop fields to change their display order or move them between
-    field groups.
-
-'
+    field groups.'
   tags: Tags
   tag_small: tag
   tagged: Tagged
