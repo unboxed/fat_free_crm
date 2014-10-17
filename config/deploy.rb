@@ -20,6 +20,9 @@ set :ssh_options, { :forward_agent => true }
 set :deploy_via, :remote_cache
 set :use_sudo, false
 
+# Use login shell so that we have access to ruby via rbenv
+set :default_shell, "bash -l"
+
 namespace :deploy do
   task :start do ; end
   task :stop do ; end
