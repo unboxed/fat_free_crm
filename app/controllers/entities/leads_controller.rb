@@ -4,6 +4,7 @@
 # See MIT-LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
 class LeadsController < EntitiesController
+  skip_before_filter :verify_authenticity_token, :only => [:create]
   before_filter :get_data_for_sidebar, :only => :index
   autocomplete :account, :name, :full => true
 
