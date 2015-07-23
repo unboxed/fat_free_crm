@@ -32,7 +32,6 @@ end
 
 # Remove premailer auto-require
 gem 'premailer', :require => false
-gem 'ffcrm_ldap', :git => 'git@github.com:unboxed/ffcrm_ldap.git'
 
 # Remove fat_free_crm dependency, to stop it from being auto-required too early.
 remove 'fat_free_crm'
