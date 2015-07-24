@@ -3,7 +3,7 @@ set :default_stage, "staging"
 
 set :repository,  "git@github.com:unboxed/fat_free_crm.git"
 set :application, "ffcrm"
-set :user, "ffcrm"
+set :user, "deploy"
 set :deploy_to,   "/home/#{user}/#{application}"
 
 require "bundler/capistrano"
@@ -44,12 +44,4 @@ namespace :deploy do
 
   # Clean up old releases (by default keeps last 5)
   after "deploy:update_code", "deploy:cleanup"
-  
-  after "deploy:finalize_update", "deploy:symlink_configs"
-  task :symlink_configs, :roles => :app do
-    run "ln -fs #{shared_path}/config/database.yml #{latest_release}/config/database.yml"
-    run "ln -fs #{shared_path}/config/settings.yml #{latest_release}/config/settings.yml"
-    run "ln -fs #{shared_path}/config/ldap.yml #{latest_release}/config/ldap.yml"
-    run "ln -fs #{shared_path}/config/ldap_attributes_map.yml #{latest_release}/config/ldap_attributes_map.yml"
-  end
 end
