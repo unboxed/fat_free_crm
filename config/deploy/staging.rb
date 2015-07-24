@@ -1,6 +1,6 @@
 set :rails_env, "staging"
 
-set :rails_server, "stage3.unboxedconsulting.com"
+set :rails_server, "ffcrm.ubxdstage.com"
 
 role :app, rails_server
 role :web, rails_server

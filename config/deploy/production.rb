@@ -1,6 +1,6 @@
 set :rails_env, "production"
 
-set :rails_server, "prod2.unboxedconsulting.com"
+set :rails_server, "ffcrm.unboxedconsulting.com"
 
 role :app, rails_server
 role :web, rails_server
