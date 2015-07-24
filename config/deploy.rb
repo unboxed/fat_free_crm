@@ -24,12 +24,24 @@ set :use_sudo, false
 set :default_shell, "bash -l"
 
 namespace :deploy do
-  task :start do ; end
-  task :stop do ; end
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
+  task :start do
+    run "/etc/init.d/#{fetch(:application)} start"
   end
-  
+
+  task :stop do
+    run "/etc/init.d/#{fetch(:application)} stop"
+  end
+
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "/etc/init.d/#{fetch(:application)} restart"
+  end
+
+  before "deploy:restart", "deploy:allow_www_data_user_access"
+
+  task :allow_www_data_user_access do
+    run "chmod -f o+rx #{fetch(:deploy_to)} #{latest_release}/public #{shared_path}"
+  end
+
   # Clean up old releases (by default keeps last 5)
   after "deploy:update_code", "deploy:cleanup"
   

@@ -37,6 +37,9 @@ gem 'ffcrm_ldap', :git => 'git@github.com:unboxed/ffcrm_ldap.git'
 # Remove fat_free_crm dependency, to stop it from being auto-required too early.
 remove 'fat_free_crm'
 
+# Add puma for deployment to Digital Ocean
+gem 'puma'
+
 group :development do
   # don't load these gems in travis
   unless ENV["CI"]
