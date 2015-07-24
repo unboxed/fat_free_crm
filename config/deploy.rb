@@ -44,4 +44,10 @@ namespace :deploy do
 
   # Clean up old releases (by default keeps last 5)
   after "deploy:update_code", "deploy:cleanup"
+
+  after "deploy:finalize_update", "deploy:symlink_configs"
+  task :symlink_configs, :roles => :app do
+    run "ln -fs #{shared_path}/config/database.yml #{latest_release}/config/database.yml"
+    run "ln -fs #{shared_path}/config/settings.yml #{latest_release}/config/settings.yml"
+  end
 end
