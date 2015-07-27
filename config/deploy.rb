@@ -50,4 +50,8 @@ namespace :deploy do
     run "ln -fs #{shared_path}/config/database.yml #{latest_release}/config/database.yml"
     run "ln -fs #{shared_path}/config/settings.yml #{latest_release}/config/settings.yml"
   end
+
+  task :add_avatars_dir, :roles => :app do
+    run "mkdir #{latest_release}/public/avatars/"
+  end
 end
